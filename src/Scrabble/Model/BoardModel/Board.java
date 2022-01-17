@@ -179,7 +179,7 @@ public class Board {
         //Creates all double word squares
         for (int col : doubleWordSpaces.keySet()){
             for (int row : doubleWordSpaces.get(col)){
-                field[col][row] = new Square(new int[]{col, row}, Square.SpecialType.DOUBLE_LETTER);
+                field[col][row] = new Square(new int[]{col, row}, Square.SpecialType.DOUBLE_WORD);
             }
         }
 
