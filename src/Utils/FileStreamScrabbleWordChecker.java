@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A Scrabble Word Checker, which walks through the words file on every check.
