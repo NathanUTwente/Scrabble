@@ -39,7 +39,14 @@ public class Board {
      * @ensures all squares and tiles in the returned board are identical to this board
      */
     public Board deepCopy(){
-        return null;
+        Board newBoard = new Board();
+        for (int col = 0; col < DIM; col++) {
+            for (int row = 0; row < DIM; row++) {
+                Tile toCopy = field[col][row].getTile();
+                newBoard.setField(col, row, new Tile(toCopy.getTileType(), toCopy.getPoints()));
+            }
+        }
+        return newBoard;
     }
 
     /**
@@ -48,16 +55,18 @@ public class Board {
      * @param col the column on the board, as a char
      * @return returns the index in a list
      */
-    public int[] index(int row, char col){
-        return  null;
+    public int[] index(char col, int row){
+        int ascii = (int) col;
+
+        return new int[]{ascii - 65, row};
     }
 
     /**
      * returns true if the provided index is a valid space on the board
      * @ensures true if the given row and col is a space within the DIM*DIM spaces on the board
      */
-    public boolean isField(int row, int col){
-        return false;
+    public boolean isField(int col, int row){
+        return (0 <= col && col < DIM) && (0 <= row && row < DIM);
     }
 
     /**
@@ -78,8 +87,13 @@ public class Board {
      * @param col the col of the square
      * @return true if the square hasn't had a letter played on it
      */
-    public boolean isEmpty(int row, int col){
-        return false;
+    public boolean isEmpty(int col, int row){
+        Square square = field[col][row];
+        if (square.getTile() == null){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -97,6 +111,11 @@ public class Board {
      * @ensures all squares are EMPTY
      */
     public void reset(){
+        for (int col = 0; col < DIM; col++){
+            for (int row = 0; row < DIM; row++){
+                field[col][row].setTile(null);
+            }
+        }
     }
 
     /**
@@ -112,6 +131,9 @@ public class Board {
         field[col][row].setTile(tile);
     }
 
+    /**
+     * Creates and fills in all special squares on the board
+     */
     public void makeAllSpecialSquares(){
 
         HashMap<Integer, int[]> tripleWordSpaces = new HashMap<>();
