@@ -31,7 +31,7 @@ public class TextBoardRepresentation {
     /**
      * Displays the results at the end of the given game
      * @requires game.isOver == true
-     * @param game the game to d
+     * @param game the game to display results of
      */
     public void displayResults(Game game){
 
