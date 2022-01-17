@@ -112,6 +112,9 @@ public class Board {
         field[col][row].setTile(tile);
     }
 
+    /**
+     * Creates and fills in all special squares on the board
+     */
     public void makeAllSpecialSquares(){
 
         HashMap<Integer, int[]> tripleWordSpaces = new HashMap<>();
