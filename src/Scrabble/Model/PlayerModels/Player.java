@@ -1,5 +1,6 @@
 package Scrabble.Model.PlayerModels;
 
+import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Tile;
 
 public abstract class Player {
@@ -26,11 +27,39 @@ public abstract class Player {
         return points;
     }
 
+    public Tile[] getTileDeck() {
+        return tileDeck;
+    }
+
     /**
+     * Counts the empty spaces in the tiledeck and returns it
+     * @return # of empty spots
+     */
+    public int EmptySpotsInDeck(){
+        int result = 0;
+        for (int i = 0; i < 7; i++){
+            if (tileDeck[i] == null){
+                result++;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @requires tiles.length <= EmptySpotsInDeck()
      * Gives tiles to player to add to their
      * @param tiles tile array of tiles to give player
      */
     public void giveTiles(Tile[] tiles){
-
+        for (Tile tile : tiles){
+            for (int i = 0; i < 7; i++){
+                if (tileDeck[i] == null){
+                    tileDeck[i] = tile;
+                }
+            }
+        }
     }
+
+    public abstract int[] determineMove(Board board);
+
 }
