@@ -58,7 +58,7 @@ public class Board {
     public int[] index(char col, int row){
         int ascii = (int) col;
 
-        return new int[]{ascii - 65, row};
+        return new int[]{ascii - 65, row - 1};
     }
 
     /**

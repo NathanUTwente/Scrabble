@@ -52,7 +52,7 @@ public class Game {
         String row = position.split("")[1];
         int[] location = board.index(col, Integer.parseInt(row));
 
-        board.setField(location[0], location[1], new Tile(Tile.TileType.AA, 1));
+        board.setField(location[0], location[1], new Tile(Tile.TileType.A, 1));
     }
 
     public void updatePoints(Player player, int points){

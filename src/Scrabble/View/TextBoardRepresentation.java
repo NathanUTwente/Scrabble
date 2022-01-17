@@ -34,10 +34,11 @@ public class TextBoardRepresentation {
         String line = "";
         while (scanner.hasNextLine()){
             line = scanner.nextLine();
-            scanner.close();
+//            scanner.close();
+            String[] move = line.split(" ");
+            return move;
         }
-        String[] move = line.split(" ");
-        return move;
+        return null;
     }
 
     /**
