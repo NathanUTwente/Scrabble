@@ -3,7 +3,7 @@ package Scrabble.Model.BoardModel;
 public class Tile {
 
     public enum TileType{
-        BLANK, AA, B, CC, DD, EE, FF, GG, HH, II, JJ, KK, LL, MM, NN, OO, PP, QQ, RR, SS, TT, UU, VV, WW, XX, YY, ZZ
+        BLANK, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
     }
 
     private TileType tileType;

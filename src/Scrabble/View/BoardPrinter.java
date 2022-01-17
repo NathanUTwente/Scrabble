@@ -10,8 +10,8 @@ public class BoardPrinter {
     public static void main(String[] args) {
         //Testing
         Board board = new Board();
-        board.setField( 0, 0, new Tile(Tile.TileType.B, 5));
-        board.setField( 1, 0, new Tile(Tile.TileType.B, 5));
+        board.setField( 1, 2, new Tile(Tile.TileType.B, 5));
+        board.setField( 1, 0, new Tile(Tile.TileType.A, 5));
         board.setField( 3, 0, new Tile(Tile.TileType.BLANK, 5));
         System.out.println(createBoard(board));
     }
@@ -44,7 +44,7 @@ public class BoardPrinter {
                             builder.append(ANSI.PURPLE_BACKGROUND);
                             break;
                         case TRIPLE_LETTER:
-                            builder.append(ANSI.BLUE_BACKGROUND_BRIGHT);
+                            builder.append(ANSI.GREEN_BACKGROUND);
                             break;
                         case TRIPLE_WORD:
                             builder.append(ANSI.RED_BACKGROUND);
@@ -53,7 +53,7 @@ public class BoardPrinter {
                             builder.append(ANSI.BLUE_BACKGROUND);
                             break;
                         case DOUBLE_WORD:
-                            builder.append(ANSI.RED_BACKGROUND_BRIGHT);
+                            builder.append(ANSI.CYAN_BACKGROUND);
                         default:
 
                     }
