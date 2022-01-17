@@ -2,6 +2,7 @@ package Scrabble.Model.PlayerModels;
 
 import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Tile;
+import Scrabble.View.TextBoardRepresentation;
 
 public abstract class Player {
     private String name;
@@ -60,6 +61,6 @@ public abstract class Player {
         }
     }
 
-    public abstract int[] determineMove(Board board);
+    public abstract String[] determineMove(Board board, TextBoardRepresentation tui);
 
 }

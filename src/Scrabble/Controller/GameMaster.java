@@ -26,15 +26,15 @@ public class GameMaster {
         while (!game.gameOver()){
             Player currentPlayer = game.getNextPlayer();
             tui.update(game.getBoard());
-            String[] move = tui.getMove(currentPlayer, game.getBoard());
-            if (moveChecker.checkMove(move, game.getBoard())){
-                game.playMove(move);
-                game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
-                //Tile[] newTiles = game.tileBag.getNewTiles(currentPlayer)
-                tui.updatePlayerDeck(currentPlayer.getTileDeck());
-            } else {
-                tui.getMove(currentPlayer, game.getBoard());
+//            String[] move = tui.getMove(currentPlayer, game.getBoard());
+            String[] move = currentPlayer.determineMove(game.getBoard(), tui);
+            while (moveChecker.checkMove(move, game.getBoard())){
+                move = currentPlayer.determineMove(game.getBoard(), tui);
             }
+            game.playMove(move);
+            game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
+            //Tile[] newTiles = game.tileBag.getNewTiles(currentPlayer)
+            tui.updatePlayerDeck(currentPlayer.getTileDeck());
         }
         tui.displayResults(game);
     }

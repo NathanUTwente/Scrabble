@@ -1,6 +1,7 @@
 package Scrabble.Model.PlayerModels;
 
 import Scrabble.Model.BoardModel.Board;
+import Scrabble.View.TextBoardRepresentation;
 
 public class HumanPlayer extends Player{
 
@@ -14,7 +15,8 @@ public class HumanPlayer extends Player{
     }
 
     @Override
-    public int[] determineMove(Board board) {
-        return new int[0];
+    public String[] determineMove(Board board, TextBoardRepresentation tui) {
+        String[] move = tui.getMove(this, board);
+        return move;
     }
 }

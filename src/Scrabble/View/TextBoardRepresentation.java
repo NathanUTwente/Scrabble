@@ -3,9 +3,17 @@ package Scrabble.View;
 import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.Game;
+import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 
+import java.util.Scanner;
+
 public class TextBoardRepresentation {
+
+    public static void main(String[] args) {
+        TextBoardRepresentation textBoardRepresentation = new TextBoardRepresentation();
+        textBoardRepresentation.getMove(new HumanPlayer("Jim"), new Board());
+    }
 
     /**
      * Method updates the TUI with the current board state
@@ -21,7 +29,10 @@ public class TextBoardRepresentation {
      * @return the move instructions parsed into a string array
      */
     public String[] getMove(Player player, Board board){
-        player.determineMove(board);
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()){
+            System.out.println(scanner.nextLine());
+        }
         return null;
     }
 
