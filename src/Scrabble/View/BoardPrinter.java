@@ -8,6 +8,7 @@ import Utils.ANSI;
 public class BoardPrinter {
 
     public static void main(String[] args) {
+        //Testing
         Board board = new Board();
         board.setField( 0, 0, new Tile(Tile.TileType.B, 5));
         board.setField( 1, 0, new Tile(Tile.TileType.B, 5));
