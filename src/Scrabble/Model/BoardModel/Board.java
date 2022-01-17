@@ -108,8 +108,8 @@ public class Board {
      * @param col the square's column
      * @param tile the tile to be placed
      */
-    public void setField(int row, int col, Tile tile){
-
+    public void setField(int col, int row, Tile tile){
+        field[col][row].setTile(tile);
     }
 
     public void makeAllSpecialSquares(){
