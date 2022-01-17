@@ -1,15 +1,36 @@
 package Scrabble.Model.BoardModel;
 
+import java.util.HashMap;
+
 public class Board {
     public static final int DIM = 15;
 
+    // Square[column][row]
     private Square[][] field;
 
+//    public static void main(String[] args) {
+//        Board board = new Board();
+//        for (int col = 0; col < DIM; col++){
+//            for (int row = 0; row < DIM; row++){
+//                System.out.println(board.field[col][row].toString());;
+//            }
+//        }
+//    }
+
     /**
-     * Constructs a board with a playing field of 15x15 Squares
+     * Constructs a board with a playing field of 15x15 Squares with special squares included
      * @ensures all squares are empty
      */
     public Board(){
+        field = new Square[DIM][DIM];
+        makeAllSpecialSquares();
+        for (int col = 0; col < DIM; col++){
+            for (int row = 0; row < DIM; row++){
+                if (field[col][row] == null) {
+                    field[col][row] = new Square(new int[]{col, row});
+                }
+            }
+        }
     }
 
     /**
@@ -88,6 +109,79 @@ public class Board {
      * @param tile the tile to be placed
      */
     public void setField(int row, int col, Tile tile){
+
+    }
+
+    public void makeAllSpecialSquares(){
+
+        HashMap<Integer, int[]> tripleWordSpaces = new HashMap<>();
+
+        tripleWordSpaces.put(0,new int[]{0, 7, 14});
+        tripleWordSpaces.put(7, new int[]{0, 14});
+        tripleWordSpaces.put(14, new int[]{0, 7, 14});
+
+        HashMap<Integer, int[]> doubleWordSpaces = new HashMap<>();
+
+        doubleWordSpaces.put(1, new int[]{1, 13});
+        doubleWordSpaces.put(2, new int[]{2, 12});
+        doubleWordSpaces.put(3, new int[]{3, 11});
+        doubleWordSpaces.put(4, new int[]{4, 10});
+        doubleWordSpaces.put(10, new int[]{4, 10});
+        doubleWordSpaces.put(11, new int[]{3, 11});
+        doubleWordSpaces.put(12, new int[]{2, 12});
+        doubleWordSpaces.put(13, new int[]{1, 13});
+
+
+        HashMap<Integer, int[]> tripleLetterSpaces = new HashMap<>();
+
+        tripleLetterSpaces.put(1, new int[]{5, 9});
+        tripleLetterSpaces.put(5, new int[]{1, 5, 9, 13});
+        tripleLetterSpaces.put(9, new int[]{1, 5, 9, 13});
+        tripleLetterSpaces.put(13, new int[]{5, 9});
+
+
+        HashMap<Integer, int[]> doubleLetterSpaces = new HashMap<>();
+
+        doubleLetterSpaces.put(0, new int[]{3, 11});
+        doubleLetterSpaces.put(2, new int[]{6, 8});
+        doubleLetterSpaces.put(3, new int[]{0, 7, 14});
+        doubleLetterSpaces.put(6, new int[]{2, 6, 8, 12});
+        doubleLetterSpaces.put(7, new int[]{3, 11});
+        doubleLetterSpaces.put(8, new int[]{2, 6, 8, 12});
+        doubleLetterSpaces.put(11, new int[]{0, 7, 14});
+        doubleLetterSpaces.put(12, new int[]{6, 8});
+        doubleLetterSpaces.put(14, new int[]{3, 11});
+
+        //Creates centre square
+        field[7][7] = new Square(new int[]{7, 7}, Square.SpecialType.CENTRE);
+
+        //Creates all triple letter squares
+        for (int col : tripleLetterSpaces.keySet()){
+            for (int row : tripleLetterSpaces.get(col)){
+                field[col][row] = new Square(new int[]{col, row}, Square.SpecialType.TRIPLE_LETTER);
+            }
+        }
+
+        //Creates all triple word squares
+        for (int col : tripleWordSpaces.keySet()){
+            for (int row : tripleWordSpaces.get(col)){
+                field[col][row] = new Square(new int[]{col, row}, Square.SpecialType.TRIPLE_WORD);
+            }
+        }
+
+        //Creates all double letter squares
+        for (int col : doubleLetterSpaces.keySet()){
+            for (int row : doubleLetterSpaces.get(col)){
+                field[col][row] = new Square(new int[]{col, row}, Square.SpecialType.DOUBLE_LETTER);
+            }
+        }
+
+        //Creates all double word squares
+        for (int col : doubleWordSpaces.keySet()){
+            for (int row : doubleWordSpaces.get(col)){
+                field[col][row] = new Square(new int[]{col, row}, Square.SpecialType.DOUBLE_LETTER);
+            }
+        }
 
     }
 }
