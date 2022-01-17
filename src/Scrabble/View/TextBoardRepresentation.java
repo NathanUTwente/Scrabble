@@ -11,6 +11,7 @@ public class TextBoardRepresentation {
      * @param board board to be displayed
      */
     public void update(Board board){
+        System.out.println(BoardPrinter.createBoard(board));
     }
 
     /**
