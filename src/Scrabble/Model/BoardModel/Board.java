@@ -67,8 +67,8 @@ public class Board {
      * @param col the col of the square
      * @return the square at the given coordinates
      */
-    public Square getSquare(int row, int col){
-        return null;
+    public Square getSquare(int col, int row){
+        return field[col][row];
     }
 
     /**

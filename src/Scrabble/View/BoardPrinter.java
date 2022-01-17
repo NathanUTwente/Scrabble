@@ -9,7 +9,7 @@ public class BoardPrinter {
 
     public static void main(String[] args) {
         Board board = new Board();
-        createBoard(board);
+        System.out.println(createBoard(board));
     }
 
     public static String createBoard(Board board){
@@ -29,28 +29,30 @@ public class BoardPrinter {
         builder.append("────┐");
         builder.append("\n");
 
-        for (int y = 0; y < Board.DIM; y++) {
-            builder.append(" " + (y<9? " " : "") + (y+1) + " ");
+        for (int row = 0; row < Board.DIM; row++) {
+            builder.append(" " + (row<9? " " : "") + (row+1) + " ");
             builder.append("│");
-            for (int x = 0; x < Board.DIM; x++) {
-                Square square = board.getSquare(x, y);
-                switch (square.getSpecialType()){
-                    case CENTRE:
-                        builder.append(ANSI.PURPLE_BACKGROUND);
-                        break;
-                    case TRIPLE_LETTER:
-                        builder.append(ANSI.BLUE_BACKGROUND_BRIGHT);
-                        break;
-                    case TRIPLE_WORD:
-                        builder.append(ANSI.RED_BACKGROUND);
-                        break;
-                    case DOUBLE_LETTER:
-                        builder.append(ANSI.BLUE_BACKGROUND);
-                        break;
-                    case DOUBLE_WORD:
-                        builder.append(ANSI.RED_BACKGROUND_BRIGHT);
-                    default:
+            for (int col = 0; col < Board.DIM; col++) {
+                Square square = board.getSquare(col, row);
+                if (square.getSpecialType() != null) {
+                    switch (square.getSpecialType()) {
+                        case CENTRE:
+                            builder.append(ANSI.PURPLE_BACKGROUND);
+                            break;
+                        case TRIPLE_LETTER:
+                            builder.append(ANSI.BLUE_BACKGROUND_BRIGHT);
+                            break;
+                        case TRIPLE_WORD:
+                            builder.append(ANSI.RED_BACKGROUND);
+                            break;
+                        case DOUBLE_LETTER:
+                            builder.append(ANSI.BLUE_BACKGROUND);
+                            break;
+                        case DOUBLE_WORD:
+                            builder.append(ANSI.RED_BACKGROUND_BRIGHT);
+                        default:
 
+                    }
                 }
                 Tile tile = square.getTile();
                 builder.append("  " + (tile != null ? tile.getTileType() : " ") + " ");
@@ -58,7 +60,7 @@ public class BoardPrinter {
                 builder.append("│");
             }
             builder.append("\n   ");
-            if (y<Board.DIM -1){
+            if (row<Board.DIM -1){
                 builder.append("├");
             }
             else {
@@ -66,15 +68,15 @@ public class BoardPrinter {
             }
 
             for (int x = 0; x < Board.DIM; x++) {
-                if(y == Board.DIM -1 && x < Board.DIM -1){
+                if(row == Board.DIM -1 && x < Board.DIM -1){
                     builder.append("────┴");
                 }
 
-                else if (y == Board.DIM -1 && x == Board.DIM -1){
+                else if (row == Board.DIM -1 && x == Board.DIM -1){
                     builder.append("────┘");
                 }
 
-                else if (y<Board.DIM -1 && x == Board.DIM -1){
+                else if (row<Board.DIM -1 && x == Board.DIM -1){
                     builder.append("────┤");
                 }
 
