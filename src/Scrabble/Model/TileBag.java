@@ -106,9 +106,5 @@ public class TileBag {
         return letters.remove(randomTileIndex);
     }
 
-    public int getScoreOfLetter(char letter){
-        int score = 0;
 
-        }
-    }
 }
