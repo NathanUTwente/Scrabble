@@ -29,11 +29,15 @@ public class TextBoardRepresentation {
      * @return the move instructions parsed into a string array
      */
     public String[] getMove(Player player, Board board){
+        System.out.println(player.getName() + " please enter your move");
         Scanner scanner = new Scanner(System.in);
+        String line = "";
         while (scanner.hasNextLine()){
-            System.out.println(scanner.nextLine());
+            line = scanner.nextLine();
+            scanner.close();
         }
-        return null;
+        String[] move = line.split(" ");
+        return move;
     }
 
     /**

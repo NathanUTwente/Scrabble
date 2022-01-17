@@ -12,6 +12,12 @@ public class GameMaster {
     private TextBoardRepresentation tui;
     private MoveChecker moveChecker;
 
+    public static void main(String[] args) {
+        GameMaster gameMaster = new GameMaster();
+        gameMaster.setUpGame();
+        gameMaster.runGame();
+    }
+
     public GameMaster() {
         this.tui = new TextBoardRepresentation();
         this.moveChecker = new MoveChecker();
@@ -28,13 +34,13 @@ public class GameMaster {
             tui.update(game.getBoard());
 //            String[] move = tui.getMove(currentPlayer, game.getBoard());
             String[] move = currentPlayer.determineMove(game.getBoard(), tui);
-            while (moveChecker.checkMove(move, game.getBoard())){
+            while (!moveChecker.checkMove(move, game.getBoard())){
                 move = currentPlayer.determineMove(game.getBoard(), tui);
             }
             game.playMove(move);
-            game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
+//            game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
             //Tile[] newTiles = game.tileBag.getNewTiles(currentPlayer)
-            tui.updatePlayerDeck(currentPlayer.getTileDeck());
+//            tui.updatePlayerDeck(currentPlayer.getTileDeck());
         }
         tui.displayResults(game);
     }

@@ -14,7 +14,7 @@ public class MoveChecker {
      */
     public boolean checkMove(String[] move, Board board){
         lastMovePoints = 0;
-        return false;
+        return true;
     }
 
     public int getLastMovePoints(){

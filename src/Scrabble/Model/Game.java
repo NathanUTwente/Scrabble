@@ -1,6 +1,7 @@
 package Scrabble.Model;
 
 import Scrabble.Model.BoardModel.Board;
+import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.View.TextBoardRepresentation;
 
@@ -45,7 +46,13 @@ public class Game {
     }
 
     public void playMove(String[] move){
+        String position = move[0];
+        String letter = move[1];
+        char col = position.charAt(0);
+        String row = position.split("")[1];
+        int[] location = board.index(col, Integer.parseInt(row));
 
+        board.setField(location[0], location[1], new Tile(Tile.TileType.AA, 1));
     }
 
     public void updatePoints(Player player, int points){
