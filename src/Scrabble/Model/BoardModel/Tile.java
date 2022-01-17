@@ -1,4 +1,4 @@
-package Scrabble.Model;
+package Scrabble.Model.BoardModel;
 
 public class Tile {
 

@@ -1,4 +1,4 @@
-package Scrabble.Model;
+package Scrabble.Model.BoardModel;
 
 public class Board {
     public static final int DIM = 15;
@@ -10,7 +10,6 @@ public class Board {
      * @ensures all squares are empty
      */
     public Board(){
-
     }
 
     /**
@@ -42,7 +41,7 @@ public class Board {
 
     /**
      * Returns the square object at the given location
-     * @requires(row, col) is a valid field on the board
+     * @requires (row, col) is a valid field on the board
      * @param row the row of the square
      * @param col the col of the square
      * @return the square at the given coordinates

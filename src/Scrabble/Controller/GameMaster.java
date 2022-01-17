@@ -1,4 +1,4 @@
 package Scrabble.Controller;
 
-public class TileFactory {
+public class GameMaster {
 }
