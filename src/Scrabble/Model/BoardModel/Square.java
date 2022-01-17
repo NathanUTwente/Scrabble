@@ -1,7 +1,9 @@
 package Scrabble.Model.BoardModel;
 
+import java.util.Arrays;
+
 public class Square {
-    private Tile tile;
+    private Tile tile = null;
     private int[] location;
     private SpecialType specialType;
 
@@ -13,13 +15,11 @@ public class Square {
 
     public Square(int[] location) {
         this.location = location;
-        this.tile = new Tile(Tile.TileType.BLANK, 0);
         this.specialType = null;
     }
 
     public Square(int[] location, SpecialType specialType) {
         this.location = location;
-        this.tile = new Tile(Tile.TileType.BLANK, 0);
         this.specialType = specialType;
     }
 
@@ -37,5 +37,14 @@ public class Square {
 
     public SpecialType getSpecialType() {
         return specialType;
+    }
+
+    @Override
+    public String toString() {
+        return "Square{" +
+                "tile=" + tile +
+                ", location=" + Arrays.toString(location) +
+                ", specialType=" + specialType +
+                '}';
     }
 }
