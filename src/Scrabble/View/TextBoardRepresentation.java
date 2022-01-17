@@ -1,6 +1,7 @@
 package Scrabble.View;
 
 import Scrabble.Model.BoardModel.Board;
+import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.Game;
 import Scrabble.Model.PlayerModels.Player;
 
@@ -19,14 +20,15 @@ public class TextBoardRepresentation {
      * @param player to get move from
      * @return the move instructions parsed into a string array
      */
-    public String[] getMove(Player player){
+    public String[] getMove(Player player, Board board){
+        player.determineMove(board);
         return null;
     }
 
     /**
      * Updates and displays the tile deck for the current player
      */
-    public void updatePlayerDeck(){
+    public void updatePlayerDeck(Tile[] tiles){
     }
 
     /**
