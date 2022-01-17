@@ -9,6 +9,9 @@ public class BoardPrinter {
 
     public static void main(String[] args) {
         Board board = new Board();
+        board.setField( 0, 0, new Tile(Tile.TileType.B, 5));
+        board.setField( 1, 0, new Tile(Tile.TileType.B, 5));
+        board.setField( 3, 0, new Tile(Tile.TileType.BLANK, 5));
         System.out.println(createBoard(board));
     }
 
@@ -21,9 +24,9 @@ public class BoardPrinter {
         }
         builder.append("\n");
 
-        builder.append("   ┌");
+        builder.append("    ┌");
 
-        for (int x = 0; x < Board.DIM; x++) {
+        for (int x = 0; x < Board.DIM -1; x++) {
             builder.append("────┰");
         }
         builder.append("────┐");
@@ -55,16 +58,16 @@ public class BoardPrinter {
                     }
                 }
                 Tile tile = square.getTile();
-                builder.append("  " + (tile != null ? tile.getTileType() : " ") + " ");
+                builder.append("  " + (tile != null ? tile.getTileLetter() : " ") + " ");
                 builder.append(ANSI.RESET);
                 builder.append("│");
             }
             builder.append("\n   ");
             if (row<Board.DIM -1){
-                builder.append("├");
+                builder.append(" ├");
             }
             else {
-                builder.append("└");
+                builder.append(" └");
             }
 
             for (int x = 0; x < Board.DIM; x++) {
