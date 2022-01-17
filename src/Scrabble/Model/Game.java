@@ -19,6 +19,8 @@ public class Game {
     public Game() {
     }
 
-    public void start(){}
+    public boolean gameOver(){
+        return false;
+    }
 
 }
