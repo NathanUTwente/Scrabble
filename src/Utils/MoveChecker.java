@@ -4,7 +4,7 @@ import Scrabble.Model.BoardModel.Board;
 
 public class MoveChecker {
     private int lastMovePoints = 0;
-    private Board board;
+    private Board boardcopy;
 
     /**
      * This method will check if the move is valid and return the result
@@ -13,7 +13,9 @@ public class MoveChecker {
      * @return true if the move is valid
      */
     public boolean checkMove(String[] move, Board board){
+        this.boardcopy = board.deepCopy();
         lastMovePoints = 0;
+
         return true;
     }
 

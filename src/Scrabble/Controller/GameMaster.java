@@ -32,7 +32,6 @@ public class GameMaster {
         while (!game.gameOver()){
             Player currentPlayer = game.getNextPlayer();
             tui.update(game.getBoard());
-//            String[] move = tui.getMove(currentPlayer, game.getBoard());
             String[] move = currentPlayer.determineMove(game.getBoard(), tui);
             while (!moveChecker.checkMove(move, game.getBoard())){
                 move = currentPlayer.determineMove(game.getBoard(), tui);

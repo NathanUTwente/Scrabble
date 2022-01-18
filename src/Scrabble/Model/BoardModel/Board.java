@@ -1,5 +1,7 @@
 package Scrabble.Model.BoardModel;
 
+import Scrabble.Model.TileBag;
+
 import java.util.HashMap;
 
 public class Board {
@@ -204,6 +206,35 @@ public class Board {
                 field[col][row] = new Square(new int[]{col, row}, Square.SpecialType.DOUBLE_WORD);
             }
         }
+    }
 
+    public static void placeMove(String[] move, Board board){
+
+        String position = move[0];
+        String direction = move[1];
+        String letters = move[2];
+        char col = position.charAt(0);
+        String row = position.split("")[1];
+        if (position.split("").length > 2){
+            row += position.split("")[2];
+        }
+        int[] location = board.index(col, Integer.parseInt(row));
+        int addition = 0;
+        if (board.isEmpty(location[0], location[1])) {
+            for (String eachLetter : letters.split("")) {
+                if (direction.equals("RIGHT")) {
+                    if (!board.isEmpty(location[0] + addition, location[1])) {
+                        addition++;
+                        }
+                    board.setField(location[0] + addition, location[1], new Tile(TileBag.stringToTile(eachLetter), 1));
+                } else {
+                    if (!board.isEmpty(location[0], location[1] + addition)) {
+                        addition++;
+                    }
+                    board.setField(location[0], location[1] + addition, new Tile(TileBag.stringToTile(eachLetter), 1));
+                }
+                addition++;
+            }
+        }
     }
 }
