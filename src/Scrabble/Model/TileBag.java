@@ -107,7 +107,7 @@ public class TileBag {
         return letters.remove(randomTileIndex);
     }
 
-    public Tile.TileType stringToTile(String letter){
+    public static Tile.TileType stringToTile(String letter){
         switch (letter){
             case "A":
             return Tile.TileType.A;
