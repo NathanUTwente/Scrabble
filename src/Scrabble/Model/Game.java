@@ -47,12 +47,23 @@ public class Game {
 
     public void playMove(String[] move){
         String position = move[0];
-        String letter = move[1];
+        String direction = move[1];
+        String letters = move[2];
         char col = position.charAt(0);
         String row = position.split("")[1];
+        if (position.split("").length > 2){
+            row += position.split("")[2];
+        }
         int[] location = board.index(col, Integer.parseInt(row));
-
-        board.setField(location[0], location[1], new Tile(Tile.TileType.A, 1));
+        int addition = 0;
+        for (String eachLetter : letters.split("")){
+            if (direction.equals("RIGHT")){
+                board.setField(location[0] + addition, location[1], new Tile(TileBag.stringToTile(eachLetter), 1));
+            } else {
+                board.setField(location[0], location[1] + addition, new Tile(TileBag.stringToTile(eachLetter), 1));
+            }
+            addition++;
+        }
     }
 
     public void updatePoints(Player player, int points){

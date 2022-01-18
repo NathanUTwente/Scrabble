@@ -6,6 +6,7 @@ import Scrabble.Model.Game;
 import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 
+import java.util.Locale;
 import java.util.Scanner;
 
 public class TextBoardRepresentation {
@@ -29,14 +30,13 @@ public class TextBoardRepresentation {
      * @return the move instructions parsed into a string array
      */
     public String[] getMove(Player player, Board board){
-        System.out.println(player.getName() + " please enter your move.");
+        System.out.println(player.getName() + " please enter your move.\nIn the form [Start Column][Start row] [Direction] [Word]\nEg. F6 RIGHT HELLO");
         Scanner scanner = new Scanner(System.in);
         String line = "";
-        while (scanner.hasNextLine()){
+        if (scanner.hasNextLine()){
             line = scanner.nextLine();
 //            scanner.close();
-            String[] move = line.split(" ");
-            return move;
+            return line.toUpperCase(Locale.ROOT).split(" ");
         }
         return null;
     }
