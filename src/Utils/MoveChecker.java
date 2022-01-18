@@ -1,6 +1,8 @@
 package Utils;
 
 import Scrabble.Model.BoardModel.Board;
+import Scrabble.Model.BoardModel.Tile;
+import Scrabble.Model.TileBag;
 
 public class MoveChecker {
     private int lastMovePoints = 0;
@@ -30,6 +32,7 @@ public class MoveChecker {
             if (scrabbleWordChecker.isValidWord(word) == null){
                 return word;
             } else {
+
                 for (int i = 0; i < word.length(); i++) {
                     String wordToCheck = getWordTillEmpty(col + i, row, DOWN);
                     if (wordToCheck.length() > 1) {
@@ -97,5 +100,14 @@ public class MoveChecker {
             checkRow += additionRow;
         }
         return word;
+    }
+
+    public int calculatePoints(String word){
+        int score = 0;
+        for (String l : word.split("")){
+            Tile.TileType tileType = TileBag.stringToTile(l);
+//            TileBag
+        }
+        return score;
     }
 }
