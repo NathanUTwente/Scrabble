@@ -26,18 +26,22 @@ public class MoveChecker {
         String direction = moveDetails[0];
         int col = Integer.parseInt(moveDetails[1]);
         int row = Integer.parseInt(moveDetails[2]);
+        String lettersUsed = moveDetails[3];
 
         if (direction.equals("RIGHT")){
             String word = getWordTillEmpty(col, row, RIGHT);
             if (scrabbleWordChecker.isValidWord(word) == null){
                 return word;
             } else {
-
+                lastMovePoints += calculatePoints(word, getDifference(word, lettersUsed));
                 for (int i = 0; i < word.length(); i++) {
-                    String wordToCheck = getWordTillEmpty(col + i, row, DOWN);
-                    if (wordToCheck.length() > 1) {
-                        if (scrabbleWordChecker.isValidWord(wordToCheck) == null) {
-                            return wordToCheck;
+                    if (lettersUsed.contains(boardCopy.getSquare(col + i, row).getTile().getTileLetter())) {
+                        String wordToCheck = getWordTillEmpty(col + i, row, DOWN);
+                        if (wordToCheck.length() > 1) {
+                            if (scrabbleWordChecker.isValidWord(wordToCheck) == null) {
+                                return wordToCheck;
+                            }
+                            lastMovePoints += calculatePoints(wordToCheck, "");
                         }
                     }
                 }
@@ -62,6 +66,16 @@ public class MoveChecker {
 
     public int getLastMovePoints(){
         return lastMovePoints;
+    }
+
+    public String getDifference(String inThis, String notThis){
+        String dif = "";
+        for (String l : inThis.split("")){
+            if (!notThis.contains(l)){
+                dif += l;
+            }
+        }
+        return dif;
     }
 
     public String getWordTillEmpty(int col, int row, String direction){
@@ -102,11 +116,12 @@ public class MoveChecker {
         return word;
     }
 
-    public int calculatePoints(String word){
+    public int calculatePoints(String word, String toExclude){
         int score = 0;
         for (String l : word.split("")){
-            Tile.TileType tileType = TileBag.stringToTile(l);
-//            TileBag
+            if (!toExclude.contains(l)) {
+                score += TileBag.GetPointOfTile(l);
+            }
         }
         return score;
     }

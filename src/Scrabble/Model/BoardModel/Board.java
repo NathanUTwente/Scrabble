@@ -222,7 +222,7 @@ public class Board {
         }
         int[] location = board.index(col, Integer.parseInt(row));
         int addition = 0;
-        String[] moveToReturn = new String[]{direction, "" + location[0], "" + location[1]};
+        String[] moveToReturn = new String[]{direction, "" + location[0], "" + location[1], letters};
         if (board.isEmpty(location[0], location[1])) {
             for (String eachLetter : letters.split("")) {
                 if (direction.equals("RIGHT")) {
