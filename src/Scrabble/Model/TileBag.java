@@ -10,40 +10,44 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class TileBag {
-    public ArrayList<Tile.TileType> tileList;
+    public ArrayList<Tile> tileList;
     final private ArrayList<Tile.TileType> letters;
+
+    public static void main(String[] args) {
+        new TileBag();
+    }
 
     public TileBag(){
         tileList = new ArrayList<>();
         
         // used for scoring
-        tileList.add(1, Tile.TileType.A);
-        tileList.add(3, Tile.TileType.B);
-        tileList.add(3, Tile.TileType.C);
-        tileList.add(2, Tile.TileType.D);
-        tileList.add(1, Tile.TileType.E);
-        tileList.add(4, Tile.TileType.F);
-        tileList.add(2, Tile.TileType.G);
-        tileList.add(4, Tile.TileType.H);
-        tileList.add(1, Tile.TileType.I);
-        tileList.add(8, Tile.TileType.J);
-        tileList.add(5, Tile.TileType.K);
-        tileList.add(1, Tile.TileType.L);
-        tileList.add(3, Tile.TileType.M);
-        tileList.add(1, Tile.TileType.N);
-        tileList.add(1, Tile.TileType.O);
-        tileList.add(3, Tile.TileType.P);
-        tileList.add(10, Tile.TileType.Q);
-        tileList.add(1, Tile.TileType.R);
-        tileList.add(1, Tile.TileType.S);
-        tileList.add(1, Tile.TileType.T);
-        tileList.add(1, Tile.TileType.U);
-        tileList.add(4, Tile.TileType.V);
-        tileList.add(4, Tile.TileType.W);
-        tileList.add(8, Tile.TileType.X);
-        tileList.add(4, Tile.TileType.Y);
-        tileList.add(10, Tile.TileType.Z);
-        tileList.add(0, Tile.TileType.BLANK);
+        tileList.add(new Tile(Tile.TileType.A, 1));
+        tileList.add(new Tile(Tile.TileType.B, 3));
+        tileList.add(new Tile(Tile.TileType.C, 3));
+        tileList.add(new Tile(Tile.TileType.D, 2));
+        tileList.add(new Tile(Tile.TileType.E, 1));
+        tileList.add(new Tile(Tile.TileType.F, 4));
+        tileList.add(new Tile(Tile.TileType.G, 2));
+        tileList.add(new Tile(Tile.TileType.H, 4));
+        tileList.add(new Tile(Tile.TileType.I, 1));
+        tileList.add(new Tile(Tile.TileType.J, 8));
+        tileList.add(new Tile(Tile.TileType.K, 5));
+        tileList.add(new Tile(Tile.TileType.L, 1));
+        tileList.add(new Tile(Tile.TileType.M, 3));
+        tileList.add(new Tile(Tile.TileType.N, 1));
+        tileList.add(new Tile(Tile.TileType.O, 1));
+        tileList.add(new Tile(Tile.TileType.P, 3));
+        tileList.add(new Tile(Tile.TileType.Q, 10));
+        tileList.add(new Tile(Tile.TileType.R, 1));
+        tileList.add(new Tile(Tile.TileType.S, 1));
+        tileList.add(new Tile(Tile.TileType.T, 1));
+        tileList.add(new Tile(Tile.TileType.U, 1));
+        tileList.add(new Tile(Tile.TileType.V, 4));
+        tileList.add(new Tile(Tile.TileType.W, 4));
+        tileList.add(new Tile(Tile.TileType.X, 8));
+        tileList.add(new Tile(Tile.TileType.Y, 4));
+        tileList.add(new Tile(Tile.TileType.Z, 10));
+        tileList.add(new Tile(Tile.TileType.BLANK, 0));
         
         letters = new ArrayList<>();
 
@@ -170,18 +174,19 @@ public class TileBag {
             return null;
     }
 
-    public int GetPointOfTile(String letter){
-        if (letters.contains(letter)){
-            return tileList.indexOf(letter);
+    public static int GetPointOfTile(String letter){
+        TileBag tileBag = new TileBag();
+        for (Tile tile : tileBag.tileList){
+            if (tile.getTileLetter().equals(letter)){
+                return tile.getPoints();
+            }
         }
-        else {
-            return 0;
-        }
+        return 0;
     }
 
-    public Tile.TileType givePlayerTile(Player player){
-        if (player)
-    }
+//    public Tile.TileType givePlayerTile(Player player){
+//        if (player)
+//    }
 
 
 }
