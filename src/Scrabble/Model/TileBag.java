@@ -6,6 +6,7 @@ import Scrabble.Model.BoardModel.Tile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class TileBag {
     public ArrayList<Tile.TileType> tileList;
@@ -104,6 +105,68 @@ public class TileBag {
         Random random = new Random();
         int randomTileIndex = random.nextInt(max+1);
         return letters.remove(randomTileIndex);
+    }
+
+    public Tile.TileType stringToTile(String letter){
+        switch (letter){
+            case "A":
+            return Tile.TileType.A;
+            case "B":
+                return Tile.TileType.B;
+            case "C":
+                return Tile.TileType.C;
+            case "D":
+                return Tile.TileType.D;
+            case "E":
+                return Tile.TileType.E;
+            case "F":
+                return Tile.TileType.F;
+            case "G":
+                return Tile.TileType.G;
+            case "H":
+                return Tile.TileType.H;
+            case "I":
+                return Tile.TileType.I;
+            case "J":
+                return Tile.TileType.J;
+            case "K":
+                return Tile.TileType.K;
+            case "L":
+                return Tile.TileType.L;
+            case "M":
+                return Tile.TileType.M;
+            case "N":
+                return Tile.TileType.N;
+            case "O":
+                return Tile.TileType.O;
+            case "P":
+                return Tile.TileType.P;
+            case "Q":
+                return Tile.TileType.Q;
+            case "R":
+                return Tile.TileType.R;
+            case "S":
+                return Tile.TileType.S;
+            case "T":
+                return Tile.TileType.T;
+            case "U":
+                return Tile.TileType.U;
+            case "V":
+                return Tile.TileType.V;
+            case "W":
+                return Tile.TileType.W;
+            case "X":
+                return Tile.TileType.X;
+            case "Y":
+                return Tile.TileType.Y;
+            case "Z":
+                return Tile.TileType.Z;
+            case "BLANK":
+                return Tile.TileType.BLANK;
+            default:
+
+            }
+            return null;
     }
 
 
