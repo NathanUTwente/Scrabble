@@ -2,6 +2,7 @@ package Scrabble.Model;
 
 
 import Scrabble.Model.BoardModel.Tile;
+import Scrabble.Model.PlayerModels.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,6 +168,19 @@ public class TileBag {
 
             }
             return null;
+    }
+
+    public int GetPointOfTile(String letter){
+        if (letters.contains(letter)){
+            return tileList.indexOf(letter);
+        }
+        else {
+            return 0;
+        }
+    }
+
+    public Tile.TileType givePlayerTile(Player player){
+        if (player)
     }
 
 

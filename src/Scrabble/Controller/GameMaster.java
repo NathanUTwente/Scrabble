@@ -42,6 +42,8 @@ public class GameMaster {
 //            game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
             //Tile[] newTiles = game.tileBag.getNewTiles(currentPlayer)
 //            tui.updatePlayerDeck(currentPlayer.getTileDeck());
+
+
         }
         tui.displayResults(game);
     }
