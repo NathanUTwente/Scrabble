@@ -210,7 +210,7 @@ public class Board {
         }
     }
 
-    public static void placeMove(String[] move, Board board){
+    public static String[] placeMove(String[] move, Board board){
 
         String position = move[0];
         String direction = move[1];
@@ -222,6 +222,7 @@ public class Board {
         }
         int[] location = board.index(col, Integer.parseInt(row));
         int addition = 0;
+        String[] moveToReturn = new String[]{direction, "" + location[0], "" + location[1]};
         if (board.isEmpty(location[0], location[1])) {
             for (String eachLetter : letters.split("")) {
                 if (direction.equals("RIGHT")) {
@@ -238,5 +239,6 @@ public class Board {
                 addition++;
             }
         }
+        return moveToReturn;
     }
 }

@@ -33,7 +33,9 @@ public class GameMaster {
             Player currentPlayer = game.getNextPlayer();
             tui.update(game.getBoard());
             String[] move = currentPlayer.determineMove(game.getBoard(), tui);
-            while (!moveChecker.checkMove(move, game.getBoard())){
+            String badWord = null;
+            while ((badWord  = moveChecker.checkMove(move, game.getBoard())) != null){
+                System.out.println(badWord + " is not a word dumbass");
                 move = currentPlayer.determineMove(game.getBoard(), tui);
             }
             game.playMove(move);
