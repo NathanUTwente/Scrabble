@@ -1,6 +1,7 @@
 package Utils;
 
 import Scrabble.Model.BoardModel.Board;
+import Scrabble.Model.BoardModel.Square;
 import Scrabble.Model.TileBag;
 
 public class MoveChecker {
@@ -47,7 +48,7 @@ public class MoveChecker {
             } else {
                 int appendCol = 0;
                 int appendRow = 0;
-                lastMovePoints += calculatePoints(word, lettersUsed);
+                lastMovePoints += calculatePoints(word, lettersUsed, col, row, rightDownFirst);
                 for (int i = 0; i < word.length(); i++) {
                     if (rightDownFirst.equals(RIGHT)){
                         appendCol = i;
@@ -110,14 +111,43 @@ public class MoveChecker {
         return word;
     }
 
-    public int calculatePoints(String word, String lettersUsed){
+    public int calculatePoints(String word, String lettersUsed, int col, int row, String direction){
         int score = 0;
+        int wordMultiplier = 1;
         for (int i = 0; i < word.length(); i++){
+            int letterMultiplier = 1;
+            int eachCol = 0;
+            int eachRow = 0;
+            if (direction.equals(RIGHT)){
+                eachCol += i;
+            } else {
+                eachRow += i;
+            }
                 if (!lettersUsed.split("")[i].equals(".")){
-                    score += TileBag.GetPointOfTile(word.split("")[i]);
+                    Square.SpecialType specialType = boardCopy.getSquare(col + eachCol, row + eachRow).getSpecialType();
+                    if (specialType != null) {
+                        switch (specialType) {
+                            case CENTRE:
+                            case DOUBLE_WORD:
+                                wordMultiplier = 2;
+                                break;
+                            case TRIPLE_WORD:
+                                wordMultiplier = 3;
+                                break;
+                            case DOUBLE_LETTER:
+                                letterMultiplier = 2;
+                                break;
+                            case TRIPLE_LETTER:
+                                letterMultiplier = 3;
+                                break;
+                        }
+                    }
+                    int letterScore = (TileBag.GetPointOfTile(word.split("")[i])) * letterMultiplier;
+                    score += letterScore;
+
                 }
         }
-        return score;
+        return score*wordMultiplier;
     }
 
     public int calculatePoints(String word){
