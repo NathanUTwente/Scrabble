@@ -45,7 +45,9 @@ public class Board {
         for (int col = 0; col < DIM; col++) {
             for (int row = 0; row < DIM; row++) {
                 Tile toCopy = field[col][row].getTile();
-                newBoard.setField(col, row, new Tile(toCopy.getTileType(), toCopy.getPoints()));
+                if (toCopy != null) {
+                    newBoard.setField(col, row, new Tile(toCopy.getTileType(), toCopy.getPoints()));
+                }
             }
         }
         return newBoard;
