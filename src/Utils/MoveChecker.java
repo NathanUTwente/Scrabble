@@ -1,7 +1,6 @@
 package Utils;
 
 import Scrabble.Model.BoardModel.Board;
-import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.TileBag;
 
 public class MoveChecker {
@@ -27,55 +26,52 @@ public class MoveChecker {
         int col = Integer.parseInt(moveDetails[1]);
         int row = Integer.parseInt(moveDetails[2]);
         String lettersUsed = moveDetails[3];
+        if (moveDetails[4].equals("F")){
+            return "Full Stop";
+        }
 
+        String rightDownFirst;
+        String rightDownSecond;
         if (direction.equals("RIGHT")){
-            String word = getWordTillEmpty(col, row, RIGHT);
+            rightDownFirst = RIGHT;
+            rightDownSecond = DOWN;
+        } else {
+            rightDownFirst = DOWN;
+            rightDownSecond = RIGHT;
+        }
+
+
+            String word = getWordTillEmpty(col, row, rightDownFirst);
             if (scrabbleWordChecker.isValidWord(word) == null){
                 return word;
             } else {
-                lastMovePoints += calculatePoints(word, getDifference(word, lettersUsed));
+                int appendCol = 0;
+                int appendRow = 0;
+                lastMovePoints += calculatePoints(word, lettersUsed);
                 for (int i = 0; i < word.length(); i++) {
-                    if (lettersUsed.contains(boardCopy.getSquare(col + i, row).getTile().getTileLetter())) {
-                        String wordToCheck = getWordTillEmpty(col + i, row, DOWN);
+                    if (rightDownFirst.equals(RIGHT)){
+                        appendCol = i;
+                    } else {
+                        appendRow = i;
+                    }
+                    String test = boardCopy.getSquare(col + appendCol, row + appendRow).getTile().getTileLetter();
+                    String test2 = lettersUsed.split("")[i];
+                    if (!(lettersUsed.split("")[i].equals("."))) {
+                        String wordToCheck = getWordTillEmpty(col + appendCol, row + appendRow, rightDownSecond);
                         if (wordToCheck.length() > 1) {
                             if (scrabbleWordChecker.isValidWord(wordToCheck) == null) {
                                 return wordToCheck;
                             }
-                            lastMovePoints += calculatePoints(wordToCheck, "");
+                            lastMovePoints += calculatePoints(wordToCheck);
                         }
                     }
                 }
             }
-        } else {
-            String word = getWordTillEmpty(col, row, DOWN);
-            if (scrabbleWordChecker.isValidWord(word) == null){
-                return word;
-            } else {
-                for (int i = 0; i < word.length(); i++) {
-                    String wordToCheck = getWordTillEmpty(col, row + i, RIGHT);
-                    if (wordToCheck.length() > 1) {
-                        if (scrabbleWordChecker.isValidWord(wordToCheck) == null) {
-                            return wordToCheck;
-                        }
-                    }
-                }
-            }
-        }
         return null;
     }
 
     public int getLastMovePoints(){
         return lastMovePoints;
-    }
-
-    public String getDifference(String inThis, String notThis){
-        String dif = "";
-        for (String l : inThis.split("")){
-            if (!notThis.contains(l)){
-                dif += l;
-            }
-        }
-        return dif;
     }
 
     public String getWordTillEmpty(int col, int row, String direction){
@@ -101,9 +97,7 @@ public class MoveChecker {
             }
         } else {
             while (boardCopy.isField(checkCol - 1, checkRow) && !boardCopy.isEmpty(checkCol - 1, checkRow)){
-                System.out.println(checkRow);
                 checkCol--;
-                System.out.println(checkRow);
             }
         }
 
@@ -116,12 +110,20 @@ public class MoveChecker {
         return word;
     }
 
-    public int calculatePoints(String word, String toExclude){
+    public int calculatePoints(String word, String lettersUsed){
         int score = 0;
-        for (String l : word.split("")){
-            if (!toExclude.contains(l)) {
-                score += TileBag.GetPointOfTile(l);
-            }
+        for (int i = 0; i < word.length(); i++){
+                if (!lettersUsed.split("")[i].equals(".")){
+                    score += TileBag.GetPointOfTile(word.split("")[i]);
+                }
+        }
+        return score;
+    }
+
+    public int calculatePoints(String word){
+        int score = 0;
+        for (int i = 0; i < word.length(); i++){
+            score += TileBag.GetPointOfTile(word.split("")[i]);
         }
         return score;
     }

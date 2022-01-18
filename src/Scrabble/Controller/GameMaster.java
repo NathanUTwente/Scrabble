@@ -39,6 +39,7 @@ public class GameMaster {
                 move = currentPlayer.determineMove(game.getBoard(), tui);
             }
             game.playMove(move);
+            System.out.println(moveChecker.getLastMovePoints());
 //            game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
             //Tile[] newTiles = game.tileBag.getNewTiles(currentPlayer)
 //            currentPlayer.giveTiles(newTiles);

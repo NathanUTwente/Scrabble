@@ -222,17 +222,27 @@ public class Board {
         }
         int[] location = board.index(col, Integer.parseInt(row));
         int addition = 0;
-        String[] moveToReturn = new String[]{direction, "" + location[0], "" + location[1], letters};
-        if (board.isEmpty(location[0], location[1])) {
+        String[] moveToReturn = new String[]{direction, "" + location[0], "" + location[1], letters, "T"};
+        if (board.isEmpty(location[0], location[1]) || letters.split("")[0].equals(".")) {
             for (String eachLetter : letters.split("")) {
                 if (direction.equals("RIGHT")) {
-                    if (!board.isEmpty(location[0] + addition, location[1])) {
+                    if (eachLetter.equals(".")) {
+                        if (board.isEmpty(location[0] + addition, location[1])){
+                            moveToReturn[4] = "F";
+                            break;
+                        }
                         addition++;
+                        continue;
                         }
                     board.setField(location[0] + addition, location[1], new Tile(TileBag.stringToTile(eachLetter), 1));
                 } else {
-                    if (!board.isEmpty(location[0], location[1] + addition)) {
+                    if (eachLetter.equals(".")) {
+                        if (board.isEmpty(location[0], location[1] + addition)) {
+                            moveToReturn[4] = "F";
+                            break;
+                        }
                         addition++;
+                        continue;
                     }
                     board.setField(location[0], location[1] + addition, new Tile(TileBag.stringToTile(eachLetter), 1));
                 }

@@ -35,7 +35,6 @@ public class TextBoardRepresentation {
         String line = "";
         if (scanner.hasNextLine()){
             line = scanner.nextLine();
-//            scanner.close();
             return line.toUpperCase(Locale.ROOT).split(" ");
         }
         return null;
