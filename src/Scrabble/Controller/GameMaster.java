@@ -29,12 +29,16 @@ public class GameMaster {
     public void setUpGame(){
         Player[] players = new Player[]{new HumanPlayer("Nathan"), new HumanPlayer("Lejla")};
         game = new Game(players);
+        for (Player player : players){
+            player.giveTiles(game.getTileBag().getTilesForPlayer(player));
+        }
     }
 
     public void runGame(){
         while (!game.gameOver()){
             Player currentPlayer = game.getNextPlayer();
             tui.update(game.getBoard());
+            tui.updatePlayerDeck(currentPlayer);
             String[] move = currentPlayer.determineMove(game.getBoard(), tui);
             String badWord = null;
             while ((badWord  = moveChecker.checkMove(move, game.getBoard())) != null){
