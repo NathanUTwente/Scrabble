@@ -104,10 +104,14 @@ public class TileBag {
     }
 
     public Tile.TileType getTileOutOfBag(){
-        int max = letters.size() - 1;
-        Random random = new Random();
-        int randomTileIndex = random.nextInt(max+1);
-        return letters.remove(randomTileIndex);
+        if (tilesLeftInBag() > 0) {
+            int max = letters.size() - 1;
+            Random random = new Random();
+            int randomTileIndex = random.nextInt(max + 1);
+            return letters.remove(randomTileIndex);
+        } else {
+            return null;
+        }
     }
 
     public static Tile.TileType stringToTile(String letter){
@@ -184,7 +188,8 @@ public class TileBag {
 
     public ArrayList<Tile.TileType> givePlayerTile(Player player){
         ArrayList<Tile.TileType> newTile = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
+        int needed = player.EmptySpotsInDeck();
+        for (int i = 0; i < needed; i++) {
             newTile.add(getTileOutOfBag());
             return newTile;
         }
