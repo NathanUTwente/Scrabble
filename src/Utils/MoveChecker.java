@@ -4,9 +4,12 @@ import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Square;
 import Scrabble.Model.TileBag;
 
+import java.util.ArrayList;
+
 public class MoveChecker {
     private int lastMovePoints = 0;
     private Board boardCopy;
+    private boolean firstDone = false;
     private InMemoryScrabbleWordChecker scrabbleWordChecker = new InMemoryScrabbleWordChecker();
     private static final String DOWN = "D";
     private static final String RIGHT = "R";
@@ -42,7 +45,11 @@ public class MoveChecker {
         }
 
 
-            String word = getWordTillEmpty(col, row, rightDownFirst);
+            String[] wordTillEmpty = getWordTillEmpty(col, row, rightDownFirst);
+            String word = wordTillEmpty[0];
+            if (wordTillEmpty[1].equals("F")){
+                return word;
+            }
             if (scrabbleWordChecker.isValidWord(word) == null){
                 return word;
             } else {
@@ -58,7 +65,7 @@ public class MoveChecker {
                     String test = boardCopy.getSquare(col + appendCol, row + appendRow).getTile().getTileLetter();
                     String test2 = lettersUsed.split("")[i];
                     if (!(lettersUsed.split("")[i].equals("."))) {
-                        String wordToCheck = getWordTillEmpty(col + appendCol, row + appendRow, rightDownSecond);
+                        String wordToCheck = getWordTillEmpty(col + appendCol, row + appendRow, rightDownSecond)[0];
                         if (wordToCheck.length() > 1) {
                             if (scrabbleWordChecker.isValidWord(wordToCheck) == null) {
                                 return wordToCheck;
@@ -75,7 +82,9 @@ public class MoveChecker {
         return lastMovePoints;
     }
 
-    public String getWordTillEmpty(int col, int row, String direction){
+    public String[] getWordTillEmpty(int col, int row, String direction){
+        ArrayList<Boolean> adjacent = new ArrayList<>();
+        String adjacentResult = "F";
         String word = "";
         int additionCol = 0;
         int additionRow = 0;
@@ -104,11 +113,49 @@ public class MoveChecker {
 
         //Get word
         while (boardCopy.isField(checkCol, checkRow) && !boardCopy.isEmpty(checkCol, checkRow)) {
+            adjacent.add(adjacentNotEmpty(checkCol, checkRow, direction));
             word += boardCopy.getSquare(checkCol, checkRow).getTile().getTileLetter();
             checkCol += additionCol;
             checkRow += additionRow;
         }
-        return word;
+
+        //Decide whether at least one letter has an adjacent existing word
+        for (boolean bool : adjacent){
+            if (bool){
+                adjacentResult = "T";
+                break;
+            }
+        }
+
+        return new String[]{word, adjacentResult};
+    }
+
+    public boolean adjacentNotEmpty(int col, int row, String exclude){
+        if (!firstDone){
+            firstDone = true;
+            return true;
+        }
+        ArrayList<Boolean> tests = new ArrayList<>();
+        if (!(exclude.equals(DOWN)) && boardCopy.isField(col, row + 1)) {
+            tests.add(!boardCopy.isEmpty(col, row + 1));
+        }
+        if (!(exclude.equals(DOWN)) && boardCopy.isField(col, row - 1)) {
+            tests.add(!boardCopy.isEmpty(col, row -1));
+        }
+        if (!(exclude.equals(RIGHT)) && boardCopy.isField(col + 1, row)) {
+            tests.add(!boardCopy.isEmpty(col + 1, row));
+        }
+        if (!(exclude.equals(RIGHT)) && boardCopy.isField(col - 1, row)) {
+            tests.add(!boardCopy.isEmpty(col - 1, row));
+        }
+        boolean notEmpty = false;
+        for (boolean bool : tests){
+            if (bool == true){
+                notEmpty = true;
+                break;
+            }
+        }
+        return notEmpty;
     }
 
     public int calculatePoints(String word, String lettersUsed, int col, int row, String direction){
