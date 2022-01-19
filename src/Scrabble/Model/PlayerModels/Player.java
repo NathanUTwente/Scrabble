@@ -4,6 +4,8 @@ import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Tile;
 import Scrabble.View.TextBoardRepresentation;
 
+import java.util.ArrayList;
+
 public abstract class Player {
     private String name;
     private Tile[] tileDeck;
@@ -51,7 +53,7 @@ public abstract class Player {
      * Gives tiles to player to add to their
      * @param tiles tile array of tiles to give player
      */
-    public void giveTiles(Tile[] tiles){
+    public void giveTiles(ArrayList<Tile> tiles){
         for (Tile tile : tiles){
             for (int i = 0; i < 7; i++){
                 if (tileDeck[i] == null){

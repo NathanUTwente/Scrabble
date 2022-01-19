@@ -1,10 +1,13 @@
 package Scrabble.Controller;
 
+import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.Game;
 import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.View.TextBoardRepresentation;
 import Utils.MoveChecker;
+
+import java.util.ArrayList;
 
 public class GameMaster {
 
@@ -41,8 +44,10 @@ public class GameMaster {
             game.playMove(move);
             System.out.println(moveChecker.getLastMovePoints());
 //            game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
-            //Tile[] newTiles = game.tileBag.getNewTiles(currentPlayer)
-//            currentPlayer.giveTiles(newTiles);
+
+            ArrayList<Tile> newTiles = game.getTileBag().getTilesForPlayer(currentPlayer);
+            currentPlayer.giveTiles(newTiles);
+            //get number of remaining tiles in bag here
 //            tui.updatePlayerDeck(currentPlayer.getTileDeck());
 
 
