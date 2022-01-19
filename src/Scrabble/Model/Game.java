@@ -15,10 +15,12 @@ public class Game {
     private int playerTurn;
     private Board board;
     private Map<Player, Integer> scores;
+    private TileBag tileBag;
 
 
     public Game(Player[] players) {
         board = new Board();
+        tileBag = new TileBag();
         this.players = players;
         scores = new HashMap<>();
         for (Player player : players){
@@ -53,6 +55,7 @@ public class Game {
 
     }
 
-
-
+    public TileBag getTileBag() {
+        return tileBag;
+    }
 }
