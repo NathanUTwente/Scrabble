@@ -7,6 +7,7 @@ import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -39,7 +40,11 @@ public class TextBoardRepresentation {
             line = scanner.nextLine();
             input = line.toUpperCase(Locale.ROOT).split(" ");
             if (checkFormat(input)){
-                return input;
+                if (playerHasLetters(player, input)){
+                    return input;
+                } else {
+                    System.out.println("You do not have the required tiles for this move, please try again");
+                }
             } else {
                 System.out.println("Wrong format, please retype your move");
             }
@@ -89,6 +94,13 @@ public class TextBoardRepresentation {
             }
         }
         return result;
+    }
+
+    //LEJLA MAKE THIS PLEASE, RETURNS TRUE IF PLAYER HAS ALL TILE INPUTTED IN THEIR DECK
+    //DONT FORGET THAT THEY CAN USE '.' AS MUCH AS THEY WANT
+    //move[2] IS THE STRING OF LETTERS USED
+    public boolean playerHasLetters(Player player, String[] move){
+        return true;
     }
 
 }
