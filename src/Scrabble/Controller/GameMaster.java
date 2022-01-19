@@ -31,6 +31,7 @@ public class GameMaster {
         game = new Game(players);
         for (Player player : players){
             player.giveTiles(game.getTileBag().getTilesForPlayer(player));
+            System.out.println("hi");
         }
     }
 
@@ -45,6 +46,7 @@ public class GameMaster {
                 System.out.println(badWord + " is not a word dumbass");
                 move = currentPlayer.determineMove(game.getBoard(), tui);
             }
+            currentPlayer.removeTiles(getTilesToRemove(move));
             game.playMove(move);
             System.out.println(moveChecker.getLastMovePoints());
 //            game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
@@ -57,6 +59,21 @@ public class GameMaster {
 
         }
         tui.displayResults(game);
+    }
+
+
+    public String[] getTilesToRemove(String[] move){
+        String[] toRemoveFromPlayer = new String[move[2].length()];
+        for (String l : move[2].split("")){
+            System.out.println(l);
+            for (int i = 0; i < toRemoveFromPlayer.length; i++){
+                if (toRemoveFromPlayer[i] == null){
+                    toRemoveFromPlayer[i] = l;
+                    break;
+                }
+            }
+        }
+        return toRemoveFromPlayer;
     }
 
 

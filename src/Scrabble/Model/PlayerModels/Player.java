@@ -58,6 +58,17 @@ public abstract class Player {
             for (int i = 0; i < 7; i++){
                 if (tileDeck[i] == null){
                     tileDeck[i] = tile;
+                    break;
+                }
+            }
+        }
+    }
+    public void removeTiles(String[] lettersToRemove){
+        for (String l : lettersToRemove){
+            for (int i = 0; i < this.tileDeck.length; i++){
+                if (this.tileDeck[i] != null && l.equals(this.tileDeck[i].getTileLetter())){
+                    this.tileDeck[i] = null;
+                    break;
                 }
             }
         }

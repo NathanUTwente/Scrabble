@@ -2,6 +2,7 @@ package Scrabble.Model;
 
 
 import Scrabble.Model.BoardModel.Tile;
+import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 
 import java.util.ArrayList;
@@ -11,9 +12,6 @@ public class TileBag {
     public ArrayList<Tile> tileList;
     final private ArrayList<Tile> tileBag;
 
-    public static void main(String[] args) {
-        new TileBag();
-    }
 
     public TileBag(){
         tileList = new ArrayList<>();
