@@ -5,9 +5,7 @@ import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.PlayerModels.Player;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 public class TileBag {
     public ArrayList<Tile> tileList;
@@ -184,9 +182,14 @@ public class TileBag {
         return 0;
     }
 
-//    public Tile.TileType givePlayerTile(Player player){
-//        if (player)
-//    }
+    public ArrayList<Tile.TileType> givePlayerTile(Player player){
+        ArrayList<Tile.TileType> newTile = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            newTile.add(getTileOutOfBag());
+            return newTile;
+        }
+        return null;
+    }
 
 
 }
