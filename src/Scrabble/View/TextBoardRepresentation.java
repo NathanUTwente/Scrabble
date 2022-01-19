@@ -43,7 +43,15 @@ public class TextBoardRepresentation {
     /**
      * Updates and displays the tile deck for the current player
      */
-    public void updatePlayerDeck(Tile[] tiles){
+    public void updatePlayerDeck(Player player){
+        StringBuilder stringBuilder = new StringBuilder();
+        Tile[] playerTiles = player.getTileDeck();
+        stringBuilder.append("Player " + player.getName() + ", this is your current tile deck\n    |");
+        for (Tile tile : playerTiles){
+            stringBuilder.append(" [" + tile.getTileLetter() + "] ");
+        }
+        stringBuilder.append("|");
+        System.out.println(stringBuilder.toString());
     }
 
     /**
