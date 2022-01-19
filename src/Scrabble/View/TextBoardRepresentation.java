@@ -96,11 +96,14 @@ public class TextBoardRepresentation {
         return result;
     }
 
-    //LEJLA MAKE THIS PLEASE, RETURNS TRUE IF PLAYER HAS ALL TILE INPUTTED IN THEIR DECK
-    //DONT FORGET THAT THEY CAN USE '.' AS MUCH AS THEY WANT
-    //move[2] IS THE STRING OF LETTERS USED
+
     public boolean playerHasLetters(Player player, String[] move){
-        return true;
+        if (player.getTileDeck().equals(move[2])){
+            if (move[2].equals(".")){
+                return true;
+            }
+        }
+            return false;
     }
 
 }
