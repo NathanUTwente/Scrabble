@@ -225,6 +225,7 @@ public class Board {
         String[] moveToReturn = new String[]{direction, "" + location[0], "" + location[1], letters, "T"};
         if (board.isEmpty(location[0], location[1]) || letters.split("")[0].equals(".")) {
             for (String eachLetter : letters.split("")) {
+                //CONDENSE NEXT BIT, NO NEED SEPARATE
                 if (direction.equals("RIGHT")) {
                     if (eachLetter.equals(".")) {
                         if (board.isEmpty(location[0] + addition, location[1])){
