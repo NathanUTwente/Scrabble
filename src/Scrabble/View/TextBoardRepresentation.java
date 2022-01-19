@@ -6,6 +6,7 @@ import Scrabble.Model.Game;
 import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -32,10 +33,16 @@ public class TextBoardRepresentation {
     public String[] getMove(Player player, Board board){
         System.out.println(player.getName() + " please enter your move.\nIn the form [Start Column][Start row] [Direction] [Word]\nEg. F6 RIGHT HELLO");
         Scanner scanner = new Scanner(System.in);
+        String[] input;
         String line = "";
-        if (scanner.hasNextLine()){
+        while (scanner.hasNextLine()){
             line = scanner.nextLine();
-            return line.toUpperCase(Locale.ROOT).split(" ");
+            input = line.toUpperCase(Locale.ROOT).split(" ");
+            if (checkFormat(input)){
+                return input;
+            } else {
+                System.out.println("Wrong format, please retype your move");
+            }
         }
         return null;
     }
@@ -61,6 +68,27 @@ public class TextBoardRepresentation {
      */
     public void displayResults(Game game){
 
+    }
+
+    public boolean checkFormat(String[] input){
+        boolean result = true;
+        ArrayList<Boolean> tests = new ArrayList<>();
+        tests.add(input.length == 3);
+        tests.add(input[0].length() <= 3);
+        tests.add(input[1].toUpperCase(Locale.ROOT).equals("RIGHT") || input[1].toUpperCase(Locale.ROOT).equals("DOWN"));
+        tests.add(!Character.isDigit(input[0].charAt(0)));
+        tests.add(Character.isDigit(input[0].charAt(1)));
+        if (input[0].length() == 3){
+            tests.add(Character.isDigit(input[0].charAt(2)));
+        }
+
+        for (Boolean bool : tests){
+            if (!bool){
+                result = false;
+                break;
+            }
+        }
+        return result;
     }
 
 }
