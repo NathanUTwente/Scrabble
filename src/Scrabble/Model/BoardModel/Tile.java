@@ -1,5 +1,7 @@
 package Scrabble.Model.BoardModel;
 
+import Scrabble.View.TextBoardRepresentation;
+
 public class Tile {
 
     public enum TileType{
@@ -26,7 +28,7 @@ public class Tile {
     
     public String getTileLetter(){
         if (this.tileType == TileType.BLANK){
-            return " ";
+            return "_";
         } else return String.valueOf(this.tileType);
     }
 

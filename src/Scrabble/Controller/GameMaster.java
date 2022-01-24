@@ -31,7 +31,6 @@ public class GameMaster {
         game = new Game(players);
         for (Player player : players){
             player.giveTiles(game.getTileBag().getTilesForPlayer(player));
-            System.out.println("hi");
         }
     }
 

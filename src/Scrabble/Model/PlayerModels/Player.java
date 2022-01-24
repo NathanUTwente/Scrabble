@@ -74,6 +74,29 @@ public abstract class Player {
         }
     }
 
+    public Tile[] cloneOfTiledeck(){
+        return getTileDeck().clone();
+    }
+
+    public void removeTile(String letterToRemove) {
+        Tile[] copyTD = cloneOfTiledeck();
+                for (int i = 0; i < copyTD.length; i++) {
+                    if (copyTD[i] != null && letterToRemove.equals(copyTD[i].getTileLetter())) {
+                        copyTD[i] = null;
+                        break;
+                    }
+                }
+            }
+
+
+
     public abstract String[] determineMove(Board board, TextBoardRepresentation tui);
+
+
+
+
+
+
+
 
 }

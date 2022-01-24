@@ -166,7 +166,7 @@ public class TileBag {
                 return Tile.TileType.Y;
             case "Z":
                 return Tile.TileType.Z;
-            case "BLANK":
+            case "_":
                 return Tile.TileType.BLANK;
             default:
 
