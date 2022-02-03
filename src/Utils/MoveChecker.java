@@ -45,10 +45,16 @@ public class MoveChecker {
             rightDownSecond = RIGHT;
         }
 
+        if (!firstDone){
+            if (!firstMoveOnCentre()){
+                //throw first move not on centre exception
+            }
+            firstDone = true;
+        }
 
             String[] wordTillEmpty = getWordTillEmpty(col, row, rightDownFirst);
             String word = wordTillEmpty[0];
-            //this if should be turned into an exception
+            //this if should be turned into a "no adjacent word" exception
             if (wordTillEmpty[1].equals("F")){
                 return word;
             }
@@ -207,5 +213,9 @@ public class MoveChecker {
             score += TileBag.GetPointOfTile(word.split("")[i]);
         }
         return score;
+    }
+
+    public boolean firstMoveOnCentre(){
+        return boardCopy.isEmpty(7, 7);
     }
 }
