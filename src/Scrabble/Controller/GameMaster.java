@@ -40,6 +40,7 @@ public class GameMaster {
             tui.update(game.getBoard());
             tui.updatePlayerDeck(currentPlayer);
             String[] move = currentPlayer.determineMove(game.getBoard(), tui);
+            //needs modification to check for exceptions
             String badWord = null;
             while ((badWord = moveChecker.checkMove(move, game.getBoard())) != null){
                 System.out.println(badWord + " is not a word dumbass");
