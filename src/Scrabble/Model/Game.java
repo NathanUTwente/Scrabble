@@ -52,7 +52,12 @@ public class Game {
     }
 
     public void updatePoints(Player player, int points){
+        scores.put(player, scores.get(player) + points);
 
+    }
+
+    public Map<Player, Integer> getScores() {
+        return scores;
     }
 
     public TileBag getTileBag() {

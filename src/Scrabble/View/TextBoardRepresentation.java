@@ -7,15 +7,21 @@ import Scrabble.Model.Game;
 import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.Model.TileBag;
+import Utils.QuickSort;
 
 import java.util.*;
 
 public class TextBoardRepresentation {
+    private final String[] POSITIONS = new String[]{"1st", "2nd", "3rd", "4th"};
 
     public static void main(String[] args) {
-        TextBoardRepresentation textBoardRepresentation = new TextBoardRepresentation();
-        textBoardRepresentation.getMove(new HumanPlayer("Jim"), new Board());
-
+//        TextBoardRepresentation tui = new TextBoardRepresentation();
+//        HashMap<Player, Integer> scores = new HashMap<>();
+//        scores.put(new HumanPlayer("Bob"), 87);
+//        scores.put(new HumanPlayer("Rob"), 15);
+//        scores.put(new HumanPlayer("Tim"), 112);
+//        scores.put(new HumanPlayer("Jim"), 3);
+//        tui.displayScores(scores);
     }
 
     /**
@@ -182,6 +188,26 @@ public class TextBoardRepresentation {
             }
             move[2] = moveCopy;
             return move;
+        }
+
+        public void displayScores(HashMap<Player , Integer> scores){
+            int[] justScores = new int[scores.values().size()];
+            int index = 0;
+            for (int i : scores.values()){
+                justScores[index] = i;
+                index++;
+            }
+            QuickSort.qsort(justScores);
+            System.out.println("The current scores are as follows: ");
+            int pos = 0;
+            for (int i = justScores.length - 1; i >= 0; i--){
+                for (Player p : scores.keySet()){
+                    if (justScores[i] == scores.get(p)){
+                        System.out.println(POSITIONS[pos] + " : " + p.getName() + " with " + justScores[i] + " points");
+                        pos++;
+                    }
+                }
+            }
         }
 
 }
