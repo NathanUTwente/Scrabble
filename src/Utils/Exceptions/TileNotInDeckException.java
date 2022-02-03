@@ -1,6 +1,6 @@
 package Utils.Exceptions;
 
-public class TileNotInDeckException extends Exception{
+public class TileNotInDeckException extends InvalidMoveException{
 
     public TileNotInDeckException(String msg){
         super(msg);
