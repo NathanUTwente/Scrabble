@@ -5,9 +5,15 @@ import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.Game;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.Model.TileBag;
+import Utils.Exceptions.InvalidAnswerException;
+import Utils.Exceptions.InvalidMoveException;
+import Utils.Exceptions.TileNotInDeckException;
+import Utils.Exceptions.WrongFormatException;
 import Utils.QuickSort;
 
 import java.util.*;
+
+import static java.lang.System.in;
 
 public class TextBoardRepresentation {
     private final String[] POSITIONS = new String[]{"1st", "2nd", "3rd", "4th"};
@@ -39,24 +45,28 @@ public class TextBoardRepresentation {
      */
     public String[] getMove(Player player, Board board) {
         System.out.println(player.getName() + " please enter your move.\nIn the form [Start Column][Start row] [Direction] [Word]\nEg. F6 RIGHT HELLO\n '_' represents a blank tile");
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(in);
         String[] input;
         String line = "";
         while (scanner.hasNextLine()) {
-            line = scanner.nextLine();
-            input = line.toUpperCase(Locale.ROOT).split(" ");
-            if (checkFormat(input)) {
-                if (playerHasLetters(player, input)) {
-                    if (input[2].contains("_")) {
-                        String[] blankReplace = getBlank(input[2]);
-                        input = replaceUnderscores(input, blankReplace);
+            try {
+                line = scanner.nextLine();
+                input = line.toUpperCase(Locale.ROOT).split(" ");
+                if (checkFormat(input)) {
+                    if (playerHasLetters(player, input)) {
+                        if (input[2].contains("_")) {
+                            String[] blankReplace = getBlank(input[2]);
+                            input = replaceUnderscores(input, blankReplace);
+                        }
+                        return input;
+                    } else {
+                        throw new TileNotInDeckException("You do not have the required tiles for this move, please try again");
                     }
-                    return input;
                 } else {
-                    System.out.println("You do not have the required tiles for this move, please try again");
+                    throw new WrongFormatException("Wrong format, please retype your move");
                 }
-            } else {
-                System.out.println("Wrong format, please retype your move");
+            } catch (InvalidMoveException e){
+                System.out.println(e.getMessage());
             }
         }
         return null;
@@ -83,7 +93,27 @@ public class TextBoardRepresentation {
      * @requires game.isOver == true
      */
     public void displayResults(Game game) {
-
+        HashMap<Player, Integer> scores = (HashMap<Player, Integer>) game.getScores();
+        int[] justScores = new int[scores.values().size()];
+        int index = 0;
+        for (int i : scores.values()){
+            justScores[index] = i;
+            index++;
+        }
+            QuickSort.qsort(justScores);
+            int pos = 1;
+            for (int i = justScores.length - 1; i >= 0; i--){
+                for (Player p : scores.keySet()){
+                    if (justScores[i] == scores.get(p)){
+                        if (i == justScores.length - 1){
+                            System.out.println("And the winner is......\n....Drum roll....\n" + p.getName() + " with " + justScores[i] + " points");
+                        } else {
+                            System.out.println(POSITIONS[pos] + " : " + p.getName() + " with " + justScores[i] + " points");
+                            pos++;
+                        }
+                    }
+                }
+            }
     }
 
     public boolean checkFormat(String[] input) {
@@ -158,7 +188,7 @@ public class TextBoardRepresentation {
             for (int i = 0; i < blankCount; i++) {
                 System.out.println("Enter letter of choice for blank tile #" + (i + 1));
                 boolean valid = false;
-                Scanner scanner = new Scanner(System.in);
+                Scanner scanner = new Scanner(in);
                 while (!valid) {
                     if (scanner.hasNextLine()) {
                         String res = scanner.nextLine();
@@ -210,37 +240,24 @@ public class TextBoardRepresentation {
             }
         }
 
-        public void EndOfGame(Map<Player , Integer> scores, Player player, Game game){
-            int[] justScores = new int[scores.values().size()];
-            int index = 0;
-            for (int i : scores.values()){
-                justScores[index] = i;
-                index++;
-            }
-                if (game.gameOver()) {
-                    QuickSort.qsort(justScores);
-                    System.out.println("The game ended with following scores ");
-                    int pos = 0;
-                    for (int i = justScores.length - 1; i >= 0; i--){
-                        for (Player p : scores.keySet()){
-                            if (justScores[i] == scores.get(p)){
-                                System.out.println(POSITIONS[pos] + " : " + p.getName() + " with " + justScores[i] + " points");
-                                pos++;
-                            }
-                        }
+        public boolean wantToPlayAgain(Player player){
+            System.out.println(player.getName() + " would you like to play again?\nY for yes, N for no");
+            Scanner scanner = new Scanner(in);
+            while (scanner.hasNextLine()){
+                try {
+                    String answer = scanner.nextLine();
+                    switch (answer){
+                        case "Y":
+                            return true;
+                        case "N":
+                            return false;
+                        default:
+                            throw new InvalidAnswerException("Please type \"Y\" to play again or \"N\" to not play again");
                     }
+                } catch (InvalidAnswerException e){
+                    System.out.println(e.getMessage());
                 }
-
-
-
-
             }
-
-
-
-
-
-
-
-
+            return false;
+        }
 }

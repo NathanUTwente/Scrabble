@@ -34,6 +34,10 @@ public class Game {
         return board;
     }
 
+    public Player[] getPlayers() {
+        return players;
+    }
+
     public Player getNextPlayer(){
         Player nextPlayer = players[playerTurn];
         playerTurn++;

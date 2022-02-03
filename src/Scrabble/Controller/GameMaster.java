@@ -19,7 +19,6 @@ public class GameMaster {
     public static void main(String[] args) {
         GameMaster gameMaster = new GameMaster();
         gameMaster.setUpGame();
-        gameMaster.runGame();
     }
 
     public GameMaster() {
@@ -29,10 +28,15 @@ public class GameMaster {
 
     public void setUpGame(){
         Player[] players = new Player[]{new HumanPlayer("Nathan"), new HumanPlayer("Lejla")};
+        setUpGame(players);
+    }
+
+    public void setUpGame(Player[] players){
         game = new Game(players);
         for (Player player : players){
             player.giveTiles(game.getTileBag().getTilesForPlayer(player));
         }
+        runGame();
     }
 
     public void runGame(){
@@ -41,7 +45,6 @@ public class GameMaster {
             tui.update(game.getBoard());
             tui.updatePlayerDeck(currentPlayer);
             String[] move = null;
-            //needs modification to check for exceptions
             boolean validMove = false;
             while (!validMove){
                 try {
@@ -59,11 +62,14 @@ public class GameMaster {
             ArrayList<Tile> newTiles = game.getTileBag().getTilesForPlayer(currentPlayer);
             currentPlayer.giveTiles(newTiles);
             tui.displayScores(game.getScores());
-            //get number of remaining tiles in bag here
-
-
         }
         tui.displayResults(game);
+        if (playAgain(game)){
+            System.out.println("Players voted to play again, good luck");
+            setUpGame(game.getPlayers());
+        } else {
+            System.out.println("One or more players decided not to play again");
+        }
     }
 
 
@@ -80,9 +86,13 @@ public class GameMaster {
         return toRemoveFromPlayer;
     }
 
-
-
-
-
-
+    public boolean playAgain(Game game){
+        boolean result = true;
+        for (Player player : game.getPlayers()){
+            if (!tui.wantToPlayAgain(player)){
+                result = false;
+            }
+        }
+        return result;
+    }
 }
