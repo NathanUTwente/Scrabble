@@ -6,6 +6,7 @@ import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.View.TextBoardRepresentation;
 import Utils.Exceptions.InvalidMoveException;
+import Utils.Exceptions.TileBagEmptyException;
 import Utils.MoveChecker;
 
 import java.util.ArrayList;
@@ -45,22 +46,37 @@ public class GameMaster {
             tui.update(game.getBoard());
             tui.updatePlayerDeck(currentPlayer);
             String[] move = null;
+            boolean skip = false;
             boolean validMove = false;
             while (!validMove){
                 try {
                     move = currentPlayer.determineMove(game.getBoard(), tui);
-                    moveChecker.checkMove(move, game.getBoard());
+                    if (move[0].equals("SKIP")){
+                        if (game.getTileBag().tilesLeftInBag() > 0) {
+                            swapTiles(currentPlayer, move[1]);
+                            skip = true;
+                        } else {
+                            throw new TileBagEmptyException("The tile bag is empty, you cannot swap tiles");
+                        }
+                    } else {
+                        moveChecker.checkMove(move, game.getBoard());
+                    }
                     validMove = true;
                 } catch (InvalidMoveException e){
                     System.out.println(e.getMessage());
                 }
             }
-            currentPlayer.removeTiles(getTilesToRemove(move));
-            game.playMove(move);
-            game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
-
-            ArrayList<Tile> newTiles = game.getTileBag().getTilesForPlayer(currentPlayer);
-            currentPlayer.giveTiles(newTiles);
+            if (!skip) {
+                currentPlayer.removeTiles(getTilesToRemove(move));
+                game.playMove(move);
+                game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
+            }
+            if (game.getTileBag().tilesLeftInBag() > 0) {
+                ArrayList<Tile> newTiles = game.getTileBag().getTilesForPlayer(currentPlayer);
+                currentPlayer.giveTiles(newTiles);
+            } else {
+                System.out.println("The tile bag is now empty, no more tile swaps are possible");
+            }
             tui.displayScores(game.getScores());
         }
         tui.displayResults(game);
@@ -70,6 +86,11 @@ public class GameMaster {
         } else {
             System.out.println("One or more players decided not to play again");
         }
+    }
+
+    public void swapTiles(Player player, String tilesToSwap){
+        String[] tilesToRemove = getTilesToRemove(new String[]{"", "", tilesToSwap});
+        player.removeTiles(tilesToRemove);
     }
 
 
