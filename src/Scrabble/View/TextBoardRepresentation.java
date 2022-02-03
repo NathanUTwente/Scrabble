@@ -91,7 +91,9 @@ public class TextBoardRepresentation {
     public boolean checkFormat(String[] input) {
         boolean result = true;
         ArrayList<Boolean> tests = new ArrayList<>();
-        tests.add(input.length == 3);
+        if (input.length != 3){
+            return false;
+        }
         tests.add(input[0].length() <= 3);
         tests.add(input[1].toUpperCase(Locale.ROOT).equals("RIGHT") || input[1].toUpperCase(Locale.ROOT).equals("DOWN"));
         tests.add(!Character.isDigit(input[0].charAt(0)));

@@ -48,6 +48,7 @@ public class MoveChecker {
         if (!firstDone){
             if (!firstMoveOnCentre()){
                 //throw first move not on centre exception
+                return "must be on centre";
             }
             firstDone = true;
         }
@@ -216,6 +217,6 @@ public class MoveChecker {
     }
 
     public boolean firstMoveOnCentre(){
-        return boardCopy.isEmpty(7, 7);
+        return !boardCopy.isEmpty(7, 7);
     }
 }
