@@ -40,7 +40,7 @@ public class GameMaster {
             Player currentPlayer = game.getNextPlayer();
             tui.update(game.getBoard());
             tui.updatePlayerDeck(currentPlayer);
-            String[] move = currentPlayer.determineMove(game.getBoard(), tui);
+            String[] move = null;
             //needs modification to check for exceptions
             boolean validMove = false;
             while (!validMove){
@@ -49,12 +49,11 @@ public class GameMaster {
                     moveChecker.checkMove(move, game.getBoard());
                     validMove = true;
                 } catch (InvalidMoveException e){
-                    System.out.println(e);
+                    System.out.println(e.getMessage());
                 }
             }
             currentPlayer.removeTiles(getTilesToRemove(move));
             game.playMove(move);
-            System.out.println(moveChecker.getLastMovePoints());
             game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
 
             ArrayList<Tile> newTiles = game.getTileBag().getTilesForPlayer(currentPlayer);
@@ -71,7 +70,6 @@ public class GameMaster {
     public String[] getTilesToRemove(String[] move){
         String[] toRemoveFromPlayer = new String[move[2].length()];
         for (String l : move[2].split("")){
-            System.out.println(l);
             for (int i = 0; i < toRemoveFromPlayer.length; i++){
                 if (toRemoveFromPlayer[i] == null){
                     toRemoveFromPlayer[i] = l;

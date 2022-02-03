@@ -49,7 +49,6 @@ public class MoveChecker {
             if (!firstMoveOnCentre()){
                 throw new NotCenteredException("The first move of the game must make use of the centre tile");
             }
-            firstDone = true;
         }
 
             String[] wordTillEmpty = getWordTillEmpty(col, row, rightDownFirst);
