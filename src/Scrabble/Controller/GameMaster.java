@@ -5,6 +5,7 @@ import Scrabble.Model.Game;
 import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.View.TextBoardRepresentation;
+import Utils.Exceptions.InvalidMoveException;
 import Utils.MoveChecker;
 
 import java.util.ArrayList;
@@ -41,10 +42,15 @@ public class GameMaster {
             tui.updatePlayerDeck(currentPlayer);
             String[] move = currentPlayer.determineMove(game.getBoard(), tui);
             //needs modification to check for exceptions
-            String badWord = null;
-            while ((badWord = moveChecker.checkMove(move, game.getBoard())) != null){
-                System.out.println(badWord + " is not a word dumbass");
-                move = currentPlayer.determineMove(game.getBoard(), tui);
+            boolean validMove = false;
+            while (!validMove){
+                try {
+                    move = currentPlayer.determineMove(game.getBoard(), tui);
+                    moveChecker.checkMove(move, game.getBoard());
+                    validMove = true;
+                } catch (InvalidMoveException e){
+                    System.out.println(e);
+                }
             }
             currentPlayer.removeTiles(getTilesToRemove(move));
             game.playMove(move);

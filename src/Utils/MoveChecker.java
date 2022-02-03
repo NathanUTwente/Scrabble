@@ -3,6 +3,7 @@ package Utils;
 import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Square;
 import Scrabble.Model.TileBag;
+import Utils.Exceptions.InvalidMoveException;
 
 import java.util.ArrayList;
 
@@ -22,7 +23,7 @@ public class MoveChecker {
      * @param board to check the move on
      * @return true if the move is valid
      */
-    public String checkMove(String[] move, Board board){
+    public String checkMove(String[] move, Board board) throws InvalidMoveException {
         this.boardCopy = board.deepCopy();
         lastMovePoints = 0;
         String[] moveDetails = Board.placeMove(move, boardCopy);
