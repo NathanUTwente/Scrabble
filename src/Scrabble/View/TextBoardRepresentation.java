@@ -108,7 +108,7 @@ public class TextBoardRepresentation {
                         if (i == justScores.length - 1){
                             System.out.println("And the winner is......\n....Drum roll....\n" + p.getName() + " with " + justScores[i] + " points");
                         } else {
-                            System.out.println(POSITIONS[pos] + " : " + p.getName() + " with " + justScores[i] + " points");
+                            System.out.println(p.getName() + " came in " + POSITIONS[pos] + " place with " + justScores[i] + " points");
                             pos++;
                         }
                     }
