@@ -3,7 +3,7 @@ package Utils;
 import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Square;
 import Scrabble.Model.TileBag;
-import Utils.Exceptions.InvalidMoveException;
+import Utils.Exceptions.*;
 
 import java.util.ArrayList;
 
@@ -32,8 +32,7 @@ public class MoveChecker {
         int row = Integer.parseInt(moveDetails[2]);
         String lettersUsed = moveDetails[3];
         if (moveDetails[4].equals("F")){
-            //this should be an improper full stop usage exception
-            return "Full Stop";
+            throw new FullStopException("You have incorrectly used a '.' in your move\nIt must go in the position of the preexisting letter the move you are making");
         }
 
         String rightDownFirst;
@@ -48,8 +47,7 @@ public class MoveChecker {
 
         if (!firstDone){
             if (!firstMoveOnCentre()){
-                //throw first move not on centre exception
-                return "must be on centre";
+                throw new NotCenteredException("The first move of the game must make use of the centre tile");
             }
             firstDone = true;
         }
@@ -58,11 +56,10 @@ public class MoveChecker {
             String word = wordTillEmpty[0];
             //this if should be turned into a "no adjacent word" exception
             if (wordTillEmpty[1].equals("F")){
-                return word;
+                throw new NotConnectedToWordException("Moves must connect to a word already placed on the board");
             }
             if (scrabbleWordChecker.isValidWord(word) == null){
-                //this should be an exception if main word is not valid
-                return word;
+                throw new InvalidMainWordException("Your word \"" + word + "\" is not a valid word according to the scrabble dictionary");
             } else {
                 int appendCol = 0;
                 int appendRow = 0;
@@ -79,8 +76,7 @@ public class MoveChecker {
                         String wordToCheck = getWordTillEmpty(col + appendCol, row + appendRow, rightDownSecond)[0];
                         if (wordToCheck.length() > 1) {
                             if (scrabbleWordChecker.isValidWord(wordToCheck) == null) {
-                                //Should be an exception for invalid connecting word
-                                return wordToCheck;
+                                throw new InvalidConnectingWordException("The word \"" + wordToCheck + "\" that connects to your main word is not a valid word according to the scrabble dictionary");
                             }
                             lastMovePoints += calculatePoints(wordToCheck);
                         }
