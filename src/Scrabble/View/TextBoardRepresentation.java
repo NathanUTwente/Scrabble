@@ -1,10 +1,8 @@
 package Scrabble.View;
 
-import Scrabble.Controller.GameMaster;
 import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.Game;
-import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.Model.TileBag;
 import Utils.QuickSort;
@@ -211,6 +209,37 @@ public class TextBoardRepresentation {
                 }
             }
         }
+
+        public void EndOfGame(Map<Player , Integer> scores, Player player, Game game){
+            int[] justScores = new int[scores.values().size()];
+            int index = 0;
+            for (int i : scores.values()){
+                justScores[index] = i;
+                index++;
+            }
+                if (game.gameOver()) {
+                    QuickSort.qsort(justScores);
+                    System.out.println("The game ended with following scores ");
+                    int pos = 0;
+                    for (int i = justScores.length - 1; i >= 0; i--){
+                        for (Player p : scores.keySet()){
+                            if (justScores[i] == scores.get(p)){
+                                System.out.println(POSITIONS[pos] + " : " + p.getName() + " with " + justScores[i] + " points");
+                                pos++;
+                            }
+                        }
+                    }
+                }
+
+
+
+
+            }
+
+
+
+
+
 
 
 
