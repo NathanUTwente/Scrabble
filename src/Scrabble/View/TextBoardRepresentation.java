@@ -190,7 +190,7 @@ public class TextBoardRepresentation {
             return move;
         }
 
-        public void displayScores(HashMap<Player , Integer> scores){
+        public void displayScores(Map<Player , Integer> scores){
             int[] justScores = new int[scores.values().size()];
             int index = 0;
             for (int i : scores.values()){

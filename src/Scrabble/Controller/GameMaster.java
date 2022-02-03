@@ -41,7 +41,7 @@ public class GameMaster {
             tui.updatePlayerDeck(currentPlayer);
             String[] move = currentPlayer.determineMove(game.getBoard(), tui);
             String badWord = null;
-            while ((badWord  = moveChecker.checkMove(move, game.getBoard())) != null){
+            while ((badWord = moveChecker.checkMove(move, game.getBoard())) != null){
                 System.out.println(badWord + " is not a word dumbass");
                 move = currentPlayer.determineMove(game.getBoard(), tui);
             }
@@ -52,8 +52,8 @@ public class GameMaster {
 
             ArrayList<Tile> newTiles = game.getTileBag().getTilesForPlayer(currentPlayer);
             currentPlayer.giveTiles(newTiles);
+            tui.displayScores(game.getScores());
             //get number of remaining tiles in bag here
-//            tui.updatePlayerDeck(currentPlayer.getTileDeck());
 
 
         }

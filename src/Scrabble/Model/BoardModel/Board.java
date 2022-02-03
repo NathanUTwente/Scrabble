@@ -229,12 +229,13 @@ public class Board {
                 if (direction.equals("RIGHT")) {
                     if (eachLetter.equals(".")) {
                         if (board.isEmpty(location[0] + addition, location[1])){
+                            //If fullstop is used in wrong place
                             moveToReturn[4] = "F";
                             break;
                         }
                         addition++;
                         continue;
-                        }
+                    }
                     board.setField(location[0] + addition, location[1], new Tile(TileBag.stringToTile(eachLetter), 1));
                 } else {
                     if (eachLetter.equals(".")) {

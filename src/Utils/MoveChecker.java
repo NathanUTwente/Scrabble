@@ -31,6 +31,7 @@ public class MoveChecker {
         int row = Integer.parseInt(moveDetails[2]);
         String lettersUsed = moveDetails[3];
         if (moveDetails[4].equals("F")){
+            //this should be an improper full stop usage exception
             return "Full Stop";
         }
 
@@ -47,10 +48,12 @@ public class MoveChecker {
 
             String[] wordTillEmpty = getWordTillEmpty(col, row, rightDownFirst);
             String word = wordTillEmpty[0];
+            //this if should be turned into an exception
             if (wordTillEmpty[1].equals("F")){
                 return word;
             }
             if (scrabbleWordChecker.isValidWord(word) == null){
+                //this should be an exception if main word is not valid
                 return word;
             } else {
                 int appendCol = 0;
@@ -68,6 +71,7 @@ public class MoveChecker {
                         String wordToCheck = getWordTillEmpty(col + appendCol, row + appendRow, rightDownSecond)[0];
                         if (wordToCheck.length() > 1) {
                             if (scrabbleWordChecker.isValidWord(wordToCheck) == null) {
+                                //Should be an exception for invalid connecting word
                                 return wordToCheck;
                             }
                             lastMovePoints += calculatePoints(wordToCheck);
