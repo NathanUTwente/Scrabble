@@ -101,16 +101,6 @@ public class Board {
     }
 
     /**
-     * Returns true if the game is over. The game is over when there is a winner
-     * or the bag has no new letters and any player is out of letters.
-     * @ensures true if the bag has no new letters and any player is out of letter or when there is a winner
-     * @return true if the game is over
-     */
-    public boolean gameOver(){
-        return false;
-    }
-
-    /**
      * Empties all fields of this board (i.e., let all squares be empty).
      * @ensures all squares are EMPTY
      */

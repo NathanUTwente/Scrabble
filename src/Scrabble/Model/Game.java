@@ -34,10 +34,6 @@ public class Game {
         return board;
     }
 
-    public boolean gameOver(){
-        return false;
-    }
-
     public Player getNextPlayer(){
         Player nextPlayer = players[playerTurn];
         playerTurn++;
@@ -62,5 +58,24 @@ public class Game {
 
     public TileBag getTileBag() {
         return tileBag;
+    }
+
+    /**
+     * Returns true if the game is over. The game is over when there is a winner
+     * or the bag has no new letters and any player is out of letters.
+     * @ensures true if the bag has no new letters and any player is out of letter or when there is a winner
+     * @return true if the game is over
+     */
+    public boolean gameOver(){
+        boolean result = false;
+        if (tileBag.tilesLeftInBag() == 0){
+            for (Player player : players){
+                if (player.getTileDeck().length == 0){
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 }
