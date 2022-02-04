@@ -1,5 +1,7 @@
 package NetworkScrabble.Network;
 
+import NetworkScrabble.Controller.GameMaster;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,17 +16,34 @@ public class ScrabbleServer {
     ArrayList<ScrabbleClientHandler> clients = new ArrayList<>();
     Socket connection;
     CountDownLatch countDownLatch;
+    GameMaster gameMaster;
 
     public static void main(String[] args) {
         ScrabbleServer scrabbleServer = new ScrabbleServer();
-        scrabbleServer.startScrabbleServer();
+        scrabbleServer.setUpServer();
+    }
+
+
+    public void setUpServer(){
+        startScrabbleServer();
         try {
-            scrabbleServer.countDownLatch.await();
+            countDownLatch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("All clients connected, waiting for ready");
-        System.out.println(scrabbleServer.clientsReady());
+        clientsReady();
+        for (ScrabbleClientHandler client : clients){
+            System.out.println(client.getClientName());
+        }
+
+    }
+
+    public void setUpGame(){
+        sendPlayerList();
+        System.out.println("Sent Out Names");
+
+
     }
 
 
@@ -68,6 +87,16 @@ public class ScrabbleServer {
             }
         }
         return result;
+    }
+
+    public void sendPlayerList(){
+        String[] playerList = new String[clients.size()];
+        for (int i = 0; i < clients.size(); i++) {
+            playerList[i] = clients.get(i).getClientName();
+        }
+        for (ScrabbleClientHandler clientHandler : clients){
+            clientHandler.sendPlayerList(playerList);
+        }
     }
 
 

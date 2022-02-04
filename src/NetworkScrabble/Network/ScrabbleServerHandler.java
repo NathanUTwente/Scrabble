@@ -12,23 +12,26 @@ public class ScrabbleServerHandler implements Runnable{
     private Socket connection;      // For communication with the client.
     private BufferedReader in;  // Stream for receiving data from client.
     private PrintWriter out;     // Stream for sending data to client.
-    private boolean inGame = false;
+//    private boolean ready = false;
+
+    private String name;
 
     Scanner userInput;
 
-    public ScrabbleServerHandler(Socket connection) throws IOException {
+    public ScrabbleServerHandler(Socket connection, String name) throws IOException {
         this.connection = connection;
         this.in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         out = new PrintWriter(connection.getOutputStream());
         userInput = new Scanner(System.in);
+        this.name = name;
     }
 
     public void doHandShake() throws IOException {
-        out.println(ProtocolMessages.HELLO);
+        out.println(ProtocolMessages.HELLO + ProtocolMessages.SEPARATOR + name);
         out.flush();
 
         String messageIn = in.readLine();
-        if (!messageIn.equals(ProtocolMessages.WELCOME)){
+        if (!messageIn.equals(ProtocolMessages.WELCOME + ProtocolMessages.SEPARATOR + name)){
             throw new IOException("Connected program is not a ScrabbleServer!");
         } else {
             System.out.println("Connected with a ScrabbleServer");
@@ -39,14 +42,13 @@ public class ScrabbleServerHandler implements Runnable{
     public void run() {
         try {
             this.doHandShake();
-            waitForGame();
+            waitForReady();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void waitForGame() throws IOException {
-        while (!inGame) {
+    public void waitForReady() throws IOException {
             String messageIn = in.readLine();
             if (messageIn.equals(ProtocolMessages.SERVERREADY)) {
                 System.out.println("You ready for a game?");
@@ -60,6 +62,22 @@ public class ScrabbleServerHandler implements Runnable{
                     }
                 }
             }
+    }
+
+//    public void waitForGame() throws IOException {
+//        String messageIn = in.readLine();
+//        if (){
+//
+//        }
+//    }
+
+    public String[] getPlayers() throws IOException {
+        String messageIn = in.readLine();
+        if (messageIn.split(ProtocolMessages.SEPARATOR)[0].equals(ProtocolMessages.HELLO)){
+            if (messageIn.split(ProtocolMessages.SEPARATOR).length > 1){
+                return messageIn.split(ProtocolMessages.SEPARATOR)[1].split(" ");
+            }
         }
+        return null;
     }
 }

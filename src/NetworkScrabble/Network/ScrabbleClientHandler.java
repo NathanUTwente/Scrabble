@@ -14,6 +14,7 @@ public class ScrabbleClientHandler implements Runnable{
     private BufferedReader in;  // Stream for receiving data from client.
     private PrintWriter out;     // Stream for sending data to client.
     private CountDownLatch countDownLatch;
+    private String clientName;
 
     Scanner userInput;
 
@@ -25,15 +26,16 @@ public class ScrabbleClientHandler implements Runnable{
     }
 
     public void doHandShake() throws IOException {
-        out.println(ProtocolMessages.WELCOME);
-        out.flush();
-
         String messageIn = in.readLine();
-        if (!messageIn.equals(ProtocolMessages.HELLO)){
-            throw new IOException("Connected program is not a ScrabbleClient!");
-        } else {
+        if ((messageIn.split(ProtocolMessages.SEPARATOR)[0].equals(ProtocolMessages.HELLO)) ){
             System.out.println("Connected with a ScrabbleClient");
+            this.clientName = messageIn.split(ProtocolMessages.SEPARATOR)[1];
+            out.println(ProtocolMessages.WELCOME + ProtocolMessages.SEPARATOR + clientName);
+            out.flush();
+        } else {
+            throw new IOException("Connected program is not a ScrabbleClient!");
         }
+
     }
 
     public void setCountDownLatch(CountDownLatch countDownLatch) {
@@ -56,5 +58,18 @@ public class ScrabbleClientHandler implements Runnable{
         String messageIn;
         messageIn = in.readLine();
         return messageIn.equals(ProtocolMessages.CLIENTREADY);
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void sendPlayerList(String[] playerNames){
+        String messageOut = ProtocolMessages.HELLO + ProtocolMessages.SEPARATOR;
+        for (String name : playerNames){
+            messageOut += name + " ";
+        }
+        out.println(messageOut);
+        out.flush();
     }
 }
