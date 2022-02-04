@@ -40,6 +40,7 @@ public class GameSlave {
             tilesToGive.add(new Tile(TileBag.stringToTile(s), TileBag.GetPointOfTile(s)));
         }
         myPlayer.giveTiles(tilesToGive);
+        tui.updatePlayerDeck(myPlayer);
     }
 
     public String[] myMove(){

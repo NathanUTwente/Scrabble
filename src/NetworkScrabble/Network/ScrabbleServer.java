@@ -27,6 +27,7 @@ public class ScrabbleServer {
     public static void main(String[] args) {
         ScrabbleServer scrabbleServer = new ScrabbleServer();
         scrabbleServer.setUpServer();
+        scrabbleServer.setUpGame();
     }
 
 
@@ -39,7 +40,6 @@ public class ScrabbleServer {
         }
         System.out.println("All clients connected, waiting for ready");
         clientsReady();
-        Player[] players;
         for (ScrabbleClientHandler client : clients){
             System.out.println(client.getClientName());
             nameHandlers.put(client.getClientName(), client);
@@ -51,7 +51,8 @@ public class ScrabbleServer {
         sendPlayerList();
         System.out.println("Sent Out Names");
         gameMaster = new GameMaster();
-        Player[] players = gameMaster.makePlayers((ArrayList<String>) nameHandlers.keySet());
+        ArrayList<String> names = new ArrayList<>(nameHandlers.keySet());
+        Player[] players = gameMaster.makePlayers(names);
         gameMaster.setUpGame(players);
         for (Player player : players){
             namePlayers.put(player.getName(), player);
@@ -64,6 +65,7 @@ public class ScrabbleServer {
             }
             handler.sendTiles(tileStrings);
         }
+        System.out.println(nameHandlers.keySet().equals(namePlayers.keySet()));
 
 
     }
@@ -74,7 +76,7 @@ public class ScrabbleServer {
         try {
             listener = new ServerSocket(DEFAULT_PORT);
             System.out.println("Listening on port " + listener.getLocalPort());
-            while (count < 2) {
+            while (count < 1) {
                 connection = listener.accept();
                 clients.add(new ScrabbleClientHandler(connection));
                 count++;

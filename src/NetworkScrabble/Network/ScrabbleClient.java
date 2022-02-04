@@ -55,7 +55,6 @@ public class ScrabbleClient {
     public void getPlayerNames(){
         try {
             this.playerNames = serverHandler.getPlayers();
-            System.out.println(playerNames);
             for (String name : playerNames){
                 System.out.println(name);
             }

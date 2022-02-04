@@ -118,14 +118,8 @@ public class GameMaster {
 
     public Player[] makePlayers(ArrayList<String> playerNames){
         Player[] result = new Player[playerNames.size()];
-
         for (int i = 0; i < playerNames.size(); i++){
-            for (Player player : game.getPlayers()){
-                if (player.getName().equals(playerNames.get(i))){
-                    result[i] = player;
-                    break;
-                }
-            }
+                    result[i] = new HumanPlayer(playerNames.get(i));
         }
         return result;
     }
