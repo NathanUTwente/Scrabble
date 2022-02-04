@@ -56,7 +56,7 @@ public class TextBoardRepresentation {
                 input = line.toUpperCase(Locale.ROOT).split(" ");
                 if (input.length == 1){
                     if (input[0].equals("SKIP")){
-                        return new String[]{"SKIP", swapTiles(player)};
+                        return new String[]{"PASS", swapTiles(player)};
                     } else {
                         throw new InvalidAnswerException("If you wish to skip your turn and replace tile(s) please type \"skip\" (Upper or lowercase is irrelevant)\nYou will be asked which tiles to swap next after");
                     }

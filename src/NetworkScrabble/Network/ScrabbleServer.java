@@ -67,12 +67,22 @@ public class ScrabbleServer {
                 sendEndOfTurn(move, earnedPoints, currentPlayer);
                 sendNewTiles(currentPlayer, move);
             } else {
-                //player swapped
+                if (processedMove > 0){
+                    sendNewTiles(currentPlayer, processedMove);
+                }
+                broadcastPass(currentPlayer);
             }
         } catch (InvalidMoveException e) {
             sendInvalidWord();
         }
     }
+
+    public void broadcastPass(Player player){
+        for (ScrabbleClientHandler clientHandler : clients){
+            clientHandler.broadcastPass(player.getName());
+        }
+    }
+
 
     public void sendInvalidWord(){
         for (ScrabbleClientHandler clientHandler : clients){
@@ -102,9 +112,13 @@ public class ScrabbleServer {
     }
 
     public int processMove(String[] move) throws InvalidNetworkMoveException, TileBagEmptyException {
-            if (move[0].equals("SKIP")) {
+            if (move[0].equals("PASS")) {
                 //can throw tilebagemptyexception
-                return gameMaster.swapTiles(move);
+                if (move.length == 2) {
+                    return gameMaster.swapTiles(move);
+                } else {
+                    return 0;
+                }
             } else {
                 //can throw invalidmoveexception
                 gameMaster.isMoveValid(move);
@@ -155,6 +169,15 @@ public class ScrabbleServer {
         String[] tileStrings = new String[tiles.size()];
         for (int i = 0; i < tiles.size(); i++){
             tileStrings[i] = tiles.get(i).getTileLetter();
+        }
+        nameHandlers.get(currentPlayer.getName()).sendTiles(tileStrings);
+
+    }
+
+    public void sendNewTiles(Player currentPlayer, int number){
+        String[] tileStrings = new String[number];
+        for (int i = 0; i < number; i++){
+            tileStrings[i] = gameMaster.giveMeATile();
         }
         nameHandlers.get(currentPlayer.getName()).sendTiles(tileStrings);
 

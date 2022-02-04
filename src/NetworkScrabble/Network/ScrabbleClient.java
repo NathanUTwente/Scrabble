@@ -1,6 +1,8 @@
 package NetworkScrabble.Network;
 
 import NetworkScrabble.Controller.GameSlave;
+import NetworkScrabble.Model.BoardModel.Tile;
+import NetworkScrabble.Model.TileBag;
 import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
 import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
 
@@ -97,23 +99,37 @@ public class ScrabbleClient {
     }
 
     public void play(){
-        lab1 : while (!gameOver){
+        while (!gameOver) {
+            boolean pass = false;
             try {
                 String turn = serverHandler.waitForTurnBroadcast();
-                if (turn.equals(name)){
+                System.out.println(turn);
+                if (turn.equals(name)) {
                     String[] move = gameSlave.myMove();
-                    serverHandler.sendMove(move);
+                    if (move[0].equals("PASS")) {
+                        serverHandler.sendSkip(move);
+                        if (move[1].length() > 0) {
+                            String[] tileString = serverHandler.waitForTiles();
+                            gameSlave.giveMeTiles(tileString);
+                            continue;
+                        }
 
+                    } else {
+                        serverHandler.sendMove(move);
+                    }
+
+                } else if (turn.equals("PASS")) {
+                    System.out.println("Player skipped their turn");
+                    pass = true;
+                    continue;
                 } else {
                     gameSlave.otherTurnInProgress(turn);
                 }
                 String[] confirmedMove = new String[0];
+                if (!pass){
                 try {
                     confirmedMove = waitForMoveConfirmation();
-                    for (String part : confirmedMove){
-                        System.out.println(part);
-                    }
-                    if (confirmedMove[0].equals(name)){
+                    if (confirmedMove[0].equals(name)) {
                         String[] move = confirmedMove[1].split(" ");
                         gameSlave.myMoveConfirmed((int) Integer.parseInt(confirmedMove[2]), move);
                         waitForTiles();
@@ -127,6 +143,7 @@ public class ScrabbleClient {
                         System.out.println("Player " + turn + " was skipped as they played an invalid word");
                     }
                 }
+            }
 
             } catch (IOException e) {
                 e.printStackTrace();

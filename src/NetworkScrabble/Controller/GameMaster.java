@@ -18,7 +18,7 @@ public class GameMaster {
     private Game game;
     private TextBoardRepresentation tui;
     private MoveChecker moveChecker;
-    private boolean gamOver = false;
+    private boolean gameOver = false;
 
     public static void main(String[] args) {
         GameMaster gameMaster = new GameMaster();
@@ -124,7 +124,12 @@ public class GameMaster {
 
     } else {
         throw new TileBagEmptyException("The tile bag is empty, you cannot swap tiles");
+        }
     }
+
+    public String giveMeATile(){
+        String tile;
+        return game.getTileBag().getTileOutOfBag().getTileLetter();
     }
 
 
@@ -178,6 +183,6 @@ public class GameMaster {
     }
 
     public boolean isGameOver() {
-        return gamOver;
+        return gameOver = false;
     }
 }

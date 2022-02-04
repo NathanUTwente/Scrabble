@@ -5,8 +5,6 @@ import NetworkScrabble.Model.Game;
 import NetworkScrabble.Model.PlayerModels.HumanPlayer;
 import NetworkScrabble.Model.PlayerModels.Player;
 import NetworkScrabble.Model.TileBag;
-import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
-import NetworkScrabble.Utils.Exceptions.TileBagEmptyException;
 import NetworkScrabble.Utils.MoveChecker;
 import NetworkScrabble.View.TextBoardRepresentation;
 
@@ -18,7 +16,7 @@ public class GameSlave {
     private TextBoardRepresentation tui;
     private MoveChecker moveChecker;
     private Player myPlayer;
-    private final static String SKIP = "SKIP";
+    private final static String PASS = "PASS";
 
     public GameSlave() {
         tui = new TextBoardRepresentation();
@@ -49,19 +47,10 @@ public class GameSlave {
         tui.updatePlayerDeck(myPlayer);
         String[] move = null;
         move = myPlayer.determineMove(game.getBoard(), tui);
-        if (!move[0].equals(SKIP)){
-            return move;
-        } else {
-            move = moveSkipped();
-            System.out.println("HERE");
-        }
-        return null;
-    }
-
-    public String[] moveSkipped(){
-
-
-        return null;
+//        if (!move[0].equals(PASS)){
+//            return move;
+//        }
+        return move;
     }
 
     public void myMoveConfirmed(int points, String[] move){
@@ -69,6 +58,10 @@ public class GameSlave {
         myPlayer.removeTiles(getTilesToRemove(move));
         game.playMove(move);
         System.out.println("Somehow made it");
+    }
+
+    public void removeTiles(String tiles){
+
     }
 
     public void otherTurnInProgress(String name){

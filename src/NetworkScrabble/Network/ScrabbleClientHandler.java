@@ -91,10 +91,16 @@ public class ScrabbleClientHandler implements Runnable{
         out.flush();
     }
 
+    public void broadcastPass(String name){
+        String messageOut = ProtocolMessages.PASS + ProtocolMessages.SEPARATOR;
+        messageOut += name;
+        out.println(messageOut);
+        out.flush();
+    }
+
     public String[] getTurnMove() throws IOException {
         String[] move = new String[3];
         String messageIn = in.readLine();
-        System.out.println("Heard");
         String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
         if (messageSplit[0].equals(ProtocolMessages.MOVE)){
             int i = 0;
@@ -102,6 +108,8 @@ public class ScrabbleClientHandler implements Runnable{
                 move[i] = part;
                 i++;
             }
+        } else if (messageSplit[0].equals(ProtocolMessages.PASS)){
+            return messageSplit;
         }
         return move;
     }

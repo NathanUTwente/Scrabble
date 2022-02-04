@@ -101,10 +101,11 @@ public class ScrabbleServerHandler implements Runnable{
 
     public String waitForTurnBroadcast() throws IOException {
         String messageIn = in.readLine();
-        System.out.println("Heard");
         String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
         if (messageSplit[0].equals(ProtocolMessages.TURN)){
             return messageSplit[1];
+        } else if (messageSplit[0].equals(ProtocolMessages.PASS)){
+            return "PASS";
         } else {
             return null;
         }
@@ -135,5 +136,17 @@ public class ScrabbleServerHandler implements Runnable{
         }
         return null;
 
+    }
+
+    public void sendSkip(String[] move){
+        String messageOut = ProtocolMessages.PASS;
+        if (move[1].length() > 0){
+            messageOut += ProtocolMessages.SEPARATOR;
+            for (String s : move[1].split("")){
+                messageOut += s + " ";
+            }
+        }
+        out.println(messageOut);
+        out.flush();
     }
 }
