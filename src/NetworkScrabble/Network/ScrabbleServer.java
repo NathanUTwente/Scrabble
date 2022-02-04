@@ -1,11 +1,15 @@
 package NetworkScrabble.Network;
 
 import NetworkScrabble.Controller.GameMaster;
+import NetworkScrabble.Model.BoardModel.Tile;
+import NetworkScrabble.Model.PlayerModels.Player;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
 public class ScrabbleServer {
@@ -17,6 +21,8 @@ public class ScrabbleServer {
     Socket connection;
     CountDownLatch countDownLatch;
     GameMaster gameMaster;
+    HashMap<String, ScrabbleClientHandler> nameHandlers = new HashMap<>();
+    HashMap<String, Player> namePlayers = new HashMap<>();
 
     public static void main(String[] args) {
         ScrabbleServer scrabbleServer = new ScrabbleServer();
@@ -33,8 +39,10 @@ public class ScrabbleServer {
         }
         System.out.println("All clients connected, waiting for ready");
         clientsReady();
+        Player[] players;
         for (ScrabbleClientHandler client : clients){
             System.out.println(client.getClientName());
+            nameHandlers.put(client.getClientName(), client);
         }
 
     }
@@ -42,6 +50,20 @@ public class ScrabbleServer {
     public void setUpGame(){
         sendPlayerList();
         System.out.println("Sent Out Names");
+        gameMaster = new GameMaster();
+        Player[] players = gameMaster.makePlayers((ArrayList<String>) nameHandlers.keySet());
+        gameMaster.setUpGame(players);
+        for (Player player : players){
+            namePlayers.put(player.getName(), player);
+        }
+        for (ScrabbleClientHandler handler : clients){
+            Tile[] tiles = namePlayers.get(handler.getClientName()).getTileDeck();
+            String[] tileStrings = new String[tiles.length];
+            for (int i = 0; i < tiles.length; i++){
+                tileStrings[i] = tiles[i].getTileLetter();
+            }
+            handler.sendTiles(tileStrings);
+        }
 
 
     }

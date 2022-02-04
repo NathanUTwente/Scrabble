@@ -72,4 +72,13 @@ public class ScrabbleClientHandler implements Runnable{
         out.println(messageOut);
         out.flush();
     }
+
+    public void sendTiles(String[] tiles){
+        String messageOut = ProtocolMessages.TILES + ProtocolMessages.SEPARATOR;
+        for (String tile : tiles){
+            messageOut += tile + " ";
+        }
+        out.println(messageOut);
+        out.flush();
+    }
 }
