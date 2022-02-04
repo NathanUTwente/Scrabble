@@ -1,5 +1,7 @@
 package NetworkScrabble.Network;
 
+import NetworkScrabble.Controller.GameSlave;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -14,6 +16,7 @@ public class ScrabbleClient {
 
     ScrabbleServerHandler serverHandler;
     Socket connection;
+    GameSlave gameSlave;
 
 
     public static void main(String[] args) {
@@ -22,6 +25,16 @@ public class ScrabbleClient {
         client.connectToServer();
         client.waitForReady();
         client.getPlayerNames();
+        client.setUpGame();
+    }
+
+    public void waitForTiles(){
+        try {
+            String[] tiles = serverHandler.waitForTiles();
+            gameSlave.giveMeTiles(tiles);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -33,11 +46,11 @@ public class ScrabbleClient {
         }
     }
 
-//    public void waitForGame(){
-//        try {
-//
-//        }
-//    }
+    public void setUpGame(){
+        gameSlave = new GameSlave();
+        gameSlave.setupGame(playerNames, name);
+        waitForTiles();
+    }
 
     public void getPlayerNames(){
         try {

@@ -19,6 +19,9 @@ public class GameSlave {
     private MoveChecker moveChecker;
     private Player myPlayer;
 
+    public GameSlave() {
+        tui = new TextBoardRepresentation();
+    }
 
     public void setupGame(String[] playerNames, String myName){
         Player[]players = new Player[playerNames.length];
@@ -31,9 +34,9 @@ public class GameSlave {
         game = new Game(players);
     }
 
-    public void giveMeTiles(String tiles){
+    public void giveMeTiles(String[] tiles){
         ArrayList<Tile> tilesToGive = new ArrayList<>();
-        for (String s : tiles.split("")){
+        for (String s : tiles){
             tilesToGive.add(new Tile(TileBag.stringToTile(s), TileBag.GetPointOfTile(s)));
         }
         myPlayer.giveTiles(tilesToGive);

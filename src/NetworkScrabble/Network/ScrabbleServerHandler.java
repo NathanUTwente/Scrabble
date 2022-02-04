@@ -71,6 +71,19 @@ public class ScrabbleServerHandler implements Runnable{
 //        }
 //    }
 
+    public String[] waitForTiles() throws IOException {
+        String[] tiles;
+        String messageIn = in.readLine();
+        String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        if (messageSplit[0].equals(ProtocolMessages.TILES)){
+            tiles = messageSplit[1].split(" ");
+            return tiles;
+        } else {
+            throw new IOException("Where me Tiles");
+        }
+
+    }
+
     public String[] getPlayers() throws IOException {
         String messageIn = in.readLine();
         if (messageIn.split(ProtocolMessages.SEPARATOR)[0].equals(ProtocolMessages.HELLO)){
