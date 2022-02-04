@@ -4,6 +4,7 @@ import NetworkScrabble.Controller.GameMaster;
 import NetworkScrabble.Model.BoardModel.Tile;
 import NetworkScrabble.Model.PlayerModels.Player;
 import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
+import NetworkScrabble.Utils.Exceptions.TileBagEmptyException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -64,7 +65,7 @@ public class ScrabbleServer {
         try {
             processedMove = processMove(move);
         } catch (InvalidMoveException e) {
-            e.printStackTrace();
+            sendInvalidWord(currentPlayer);
         }
         System.out.println(processedMove);
         if (processedMove == -500){
@@ -75,8 +76,10 @@ public class ScrabbleServer {
         } else {
             //player swapped
         }
+    }
 
-
+    public void sendInvalidWord(Player player){
+        nameHandlers.get(player.getName()).sendInvalidMove();
     }
 
     public void sendEndOfTurn(String[] move, int earnedPoints, Player currentPlayer){

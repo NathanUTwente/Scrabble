@@ -115,4 +115,10 @@ public class ScrabbleClientHandler implements Runnable{
         out.println(messageOut);
         out.flush();
     }
+
+    public void sendInvalidMove(){
+        String messageOut = ProtocolMessages.ERROR+ ProtocolMessages.INVALID_MOVE;
+        out.println(messageOut);
+        out.flush();
+    }
 }
