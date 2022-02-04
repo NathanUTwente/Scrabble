@@ -1,5 +1,4 @@
 package Scrabble.View;
-
 import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.Game;
@@ -19,13 +18,7 @@ public class TextBoardRepresentation {
     private final String[] POSITIONS = new String[]{"1st", "2nd", "3rd", "4th"};
 
     public static void main(String[] args) {
-//        TextBoardRepresentation tui = new TextBoardRepresentation();
-//        HashMap<Player, Integer> scores = new HashMap<>();
-//        scores.put(new HumanPlayer("Bob"), 87);
-//        scores.put(new HumanPlayer("Rob"), 15);
-//        scores.put(new HumanPlayer("Tim"), 112);
-//        scores.put(new HumanPlayer("Jim"), 3);
-//        tui.displayScores(scores);
+
     }
 
     /**

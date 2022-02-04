@@ -1,14 +1,10 @@
 package Scrabble.Model;
 
 import Scrabble.Model.BoardModel.Board;
-import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.PlayerModels.Player;
-import Scrabble.View.TextBoardRepresentation;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class Game {
     private Player[] players;
@@ -26,8 +22,9 @@ public class Game {
         for (Player player : players){
             scores.put(player, 0);
         }
-        //Should randomise this later
-        playerTurn = 0;
+        Random random = new Random();
+        int randomOrder = random.nextInt(2);
+        playerTurn = randomOrder;
     }
 
     public Board getBoard() {
