@@ -2,7 +2,7 @@ package Scrabble.View;
 import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Square;
 import Scrabble.Model.BoardModel.Tile;
-import Utils.ANSI;
+import Scrabble.Utils.ANSI;
 
 
 public class BoardPrinter {

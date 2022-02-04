@@ -4,10 +4,10 @@ import NetworkScrabble.Model.BoardModel.Tile;
 import NetworkScrabble.Model.Game;
 import NetworkScrabble.Model.PlayerModels.HumanPlayer;
 import NetworkScrabble.Model.PlayerModels.Player;
+import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
+import NetworkScrabble.Utils.Exceptions.TileBagEmptyException;
+import NetworkScrabble.Utils.MoveChecker;
 import NetworkScrabble.View.TextBoardRepresentation;
-import Utils.Exceptions.InvalidMoveException;
-import Utils.Exceptions.TileBagEmptyException;
-import Utils.MoveChecker;
 
 import java.util.ArrayList;
 

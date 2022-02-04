@@ -2,7 +2,7 @@ package NetworkScrabble.View;
 import NetworkScrabble.Model.BoardModel.Board;
 import NetworkScrabble.Model.BoardModel.Square;
 import NetworkScrabble.Model.BoardModel.Tile;
-import Utils.ANSI;
+import NetworkScrabble.Utils.ANSI;
 
 
 public class BoardPrinter {

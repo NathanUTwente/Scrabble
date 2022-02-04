@@ -5,9 +5,9 @@ import Scrabble.Model.Game;
 import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.View.TextBoardRepresentation;
-import Utils.Exceptions.InvalidMoveException;
-import Utils.Exceptions.TileBagEmptyException;
-import Utils.MoveChecker;
+import Scrabble.Utils.Exceptions.InvalidMoveException;
+import Scrabble.Utils.Exceptions.TileBagEmptyException;
+import Scrabble.Utils.MoveChecker;
 
 import java.util.ArrayList;
 

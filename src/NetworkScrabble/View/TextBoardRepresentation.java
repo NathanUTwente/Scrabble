@@ -6,11 +6,11 @@ import NetworkScrabble.Model.Game;
 import NetworkScrabble.Model.PlayerModels.HumanPlayer;
 import NetworkScrabble.Model.PlayerModels.Player;
 import NetworkScrabble.Model.TileBag;
-import Utils.Exceptions.InvalidAnswerException;
-import Utils.Exceptions.InvalidMoveException;
-import Utils.Exceptions.TileNotInDeckException;
-import Utils.Exceptions.WrongFormatException;
-import Utils.QuickSort;
+import NetworkScrabble.Utils.Exceptions.InvalidAnswerException;
+import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
+import NetworkScrabble.Utils.Exceptions.TileNotInDeckException;
+import NetworkScrabble.Utils.Exceptions.WrongFormatException;
+import NetworkScrabble.Utils.QuickSort;
 
 import java.util.*;
 
