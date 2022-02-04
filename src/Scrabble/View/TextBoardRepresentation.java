@@ -1,14 +1,16 @@
 package Scrabble.View;
+
 import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.Game;
+import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.Model.TileBag;
-import Utils.Exceptions.InvalidAnswerException;
-import Utils.Exceptions.InvalidMoveException;
-import Utils.Exceptions.TileNotInDeckException;
-import Utils.Exceptions.WrongFormatException;
-import Utils.QuickSort;
+import Scrabble.Utils.Exceptions.InvalidAnswerException;
+import Scrabble.Utils.Exceptions.InvalidMoveException;
+import Scrabble.Utils.Exceptions.TileNotInDeckException;
+import Scrabble.Utils.Exceptions.WrongFormatException;
+import Scrabble.Utils.QuickSort;
 
 import java.util.*;
 

@@ -184,7 +184,12 @@ public class TileBag {
         ArrayList<Tile> newTile = new ArrayList<>();
         int needed = player.EmptySpotsInDeck();
         for (int i = 0; i < needed; i++) {
-            newTile.add(getTileOutOfBag());
+            Tile tile = getTileOutOfBag();
+            if (tile != null) {
+                newTile.add(tile);
+            } else {
+                break;
+            }
         }
         return newTile;
     }
