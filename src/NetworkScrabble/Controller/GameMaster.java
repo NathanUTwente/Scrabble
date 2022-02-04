@@ -6,12 +6,12 @@ import NetworkScrabble.Model.PlayerModels.HumanPlayer;
 import NetworkScrabble.Model.PlayerModels.Player;
 import NetworkScrabble.Model.TileBag;
 import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
+import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
 import NetworkScrabble.Utils.Exceptions.TileBagEmptyException;
 import NetworkScrabble.Utils.MoveChecker;
 import NetworkScrabble.View.TextBoardRepresentation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class GameMaster {
 
@@ -106,9 +106,12 @@ public class GameMaster {
         }
     }
 
-    public boolean isMoveValid(String[] move) throws InvalidMoveException {
-        moveChecker.checkMove(move, game.getBoard());
-        return true;
+    public void isMoveValid(String[] move) throws InvalidNetworkMoveException {
+        try {
+            moveChecker.checkMove(move, game.getBoard());
+        } catch (InvalidMoveException e) {
+            throw new InvalidNetworkMoveException("Invalid Move, turn skipped");
+        }
     }
 
     public int swapTiles(String[] move) throws TileBagEmptyException {

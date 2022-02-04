@@ -1,6 +1,8 @@
 package NetworkScrabble.Network;
 
 import NetworkScrabble.Controller.GameSlave;
+import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
+import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -95,7 +97,7 @@ public class ScrabbleClient {
     }
 
     public void play(){
-        while (!gameOver){
+        lab1 : while (!gameOver){
             try {
                 String turn = serverHandler.waitForTurnBroadcast();
                 if (turn.equals(name)){
@@ -105,24 +107,30 @@ public class ScrabbleClient {
                 } else {
                     gameSlave.otherTurnInProgress(turn);
                 }
-                String[] confirmedMove = waitForMoveConfirmation();
-                for (String part : confirmedMove){
-                    System.out.println(part);
+                String[] confirmedMove = new String[0];
+                try {
+                    confirmedMove = waitForMoveConfirmation();
+                    for (String part : confirmedMove){
+                        System.out.println(part);
+                    }
+                    if (confirmedMove[0].equals(name)){
+                        String[] move = confirmedMove[1].split(" ");
+                        gameSlave.myMoveConfirmed((int) Integer.parseInt(confirmedMove[2]), move);
+                        waitForTiles();
+                    } else {
+                        gameSlave.otherTurnDone(confirmedMove[1].split(" "), (int) Integer.parseInt(confirmedMove[2]), confirmedMove[0]);
+                    }
+                } catch (InvalidNetworkMoveException e) {
+                    System.out.println(e.getMessage());
                 }
-                if (confirmedMove[0].equals(name)){
-                    String[] move = confirmedMove[1].split(" ");
-                    gameSlave.myMoveConfirmed((int) Integer.parseInt(confirmedMove[2]), move);
-                    waitForTiles();
-                } else {
-                    gameSlave.otherTurnDone(confirmedMove[1].split(" "), (int) Integer.parseInt(confirmedMove[2]), confirmedMove[0]);
-                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public String[] waitForMoveConfirmation() throws IOException {
+    public String[] waitForMoveConfirmation() throws IOException, InvalidNetworkMoveException {
         return serverHandler.waitForMoveConfirmation();
     }
 

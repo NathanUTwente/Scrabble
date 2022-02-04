@@ -2,6 +2,7 @@ package NetworkScrabble.Model;
 
 import NetworkScrabble.Model.BoardModel.Board;
 import NetworkScrabble.Model.PlayerModels.Player;
+import NetworkScrabble.Utils.Exceptions.OffBoardException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +47,11 @@ public class Game {
     }
 
     public void playMove(String[] move){
-        Board.placeMove(move, board);
+//        try {
+            Board.placeMove(move, board);
+//        } catch (OffBoardException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void updatePoints(Player player, int points){

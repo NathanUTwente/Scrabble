@@ -4,6 +4,7 @@ import NetworkScrabble.Controller.GameMaster;
 import NetworkScrabble.Model.BoardModel.Tile;
 import NetworkScrabble.Model.PlayerModels.Player;
 import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
+import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
 import NetworkScrabble.Utils.Exceptions.TileBagEmptyException;
 
 import java.io.IOException;
@@ -45,18 +46,15 @@ public class ScrabbleServer {
     }
 
     public void runGame(){
-//        while (!gameMaster.isGameOver()){
-            runTurn();
-            runTurn();
+        while (!gameMaster.isGameOver()){
             runTurn();
 
-//        }
+        }
     }
 
     public void runTurn(){
         Player currentPlayer = gameMaster.getCurrentPlayer();
         broadcastTurn(currentPlayer);
-        System.out.println("To here");
         String[] move = getCurrentMove(currentPlayer);
         for (String m : move){
             System.out.println(m);
@@ -64,17 +62,15 @@ public class ScrabbleServer {
         int processedMove = 0;
         try {
             processedMove = processMove(move);
+            if (processedMove == -500){
+                int earnedPoints = gameMaster.endOfMove(currentPlayer, move);
+                sendEndOfTurn(move, earnedPoints, currentPlayer);
+                sendNewTiles(currentPlayer, move);
+            } else {
+                //player swapped
+            }
         } catch (InvalidMoveException e) {
             sendInvalidWord(currentPlayer);
-        }
-        System.out.println(processedMove);
-        if (processedMove == -500){
-            int earnedPoints = gameMaster.endOfMove(currentPlayer, move);
-            sendEndOfTurn(move, earnedPoints, currentPlayer);
-            //remove tiles played
-            sendNewTiles(currentPlayer, move);
-        } else {
-            //player swapped
         }
     }
 
@@ -103,7 +99,7 @@ public class ScrabbleServer {
         return null;
     }
 
-    public int processMove(String[] move) throws InvalidMoveException {
+    public int processMove(String[] move) throws InvalidNetworkMoveException, TileBagEmptyException {
             if (move[0].equals("SKIP")) {
                 //can throw tilebagemptyexception
                 return gameMaster.swapTiles(move);

@@ -1,5 +1,8 @@
 package NetworkScrabble.Network;
 
+import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
+import Scrabble.Utils.Exceptions.InvalidMoveException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -117,7 +120,7 @@ public class ScrabbleServerHandler implements Runnable{
 
     }
 
-    public String[] waitForMoveConfirmation() throws IOException {
+    public String[] waitForMoveConfirmation() throws IOException, InvalidNetworkMoveException {
         String messageIn = in.readLine();
         System.out.println(messageIn);
         String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
@@ -127,6 +130,8 @@ public class ScrabbleServerHandler implements Runnable{
                 move[i - 1] = messageSplit[i];
             }
             return move;
+        } else if ((messageSplit[0].equals(ProtocolMessages.ERROR)) && (messageSplit[1].equals(ProtocolMessages.INVALID_MOVE))){
+            throw new InvalidNetworkMoveException("Your move was invalid, you dont get any points and you lose your turn");
         }
         return null;
 
