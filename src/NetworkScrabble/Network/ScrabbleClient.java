@@ -132,9 +132,11 @@ public class ScrabbleClient {
                     if (confirmedMove[0].equals(name)) {
                         String[] move = confirmedMove[1].split(" ");
                         gameSlave.myMoveConfirmed((int) Integer.parseInt(confirmedMove[2]), move);
+                        gameSlave.displayScores();
                         waitForTiles();
                     } else {
                         gameSlave.otherTurnDone(confirmedMove[1].split(" "), (int) Integer.parseInt(confirmedMove[2]), confirmedMove[0]);
+                        gameSlave.displayScores();
                     }
                 } catch (InvalidNetworkMoveException e) {
                     if (turn.equals(name)) {

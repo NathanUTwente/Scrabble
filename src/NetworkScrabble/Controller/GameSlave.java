@@ -60,8 +60,8 @@ public class GameSlave {
         System.out.println("Somehow made it");
     }
 
-    public void removeTiles(String tiles){
-
+    public void displayScores(){
+        tui.displayScores(game.getScores());
     }
 
     public void otherTurnInProgress(String name){
