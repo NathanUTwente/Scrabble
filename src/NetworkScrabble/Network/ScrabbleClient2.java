@@ -7,11 +7,21 @@ public class ScrabbleClient2 {
 
     static final int DEFAULT_PORT = 8028;
 
+    ScrabbleServerHandler serverHandler;
     Socket connection;
 
     public static void main(String[] args) {
         ScrabbleClient2 client = new ScrabbleClient2();
         client.connectToServer();
+        client.waitForGame();
+    }
+
+    public void waitForGame(){
+        try {
+            serverHandler.waitForGame();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -27,7 +37,8 @@ public class ScrabbleClient2 {
         }
 
         try {
-            ScrabbleHandler handler = new ScrabbleHandler(connection);
+            ScrabbleServerHandler handler = new ScrabbleServerHandler(connection);
+            serverHandler = handler;
             handler.doHandShake();
             System.out.println("Connected.  Time for more");
         } catch (IOException e) {
@@ -35,7 +46,6 @@ public class ScrabbleClient2 {
         }
 
     }
-
 
 
 }
