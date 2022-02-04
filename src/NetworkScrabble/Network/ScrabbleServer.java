@@ -48,7 +48,15 @@ public class ScrabbleServer {
     public void runGame(){
         while (!gameMaster.isGameOver()){
             runTurn();
+        }
+        gameMaster.gameEnd();
+        broadcastGameOver();
 
+    }
+
+    public void broadcastGameOver(){
+        for (ScrabbleClientHandler clientHandler : clients){
+            clientHandler.broadcastGameOver();
         }
     }
 

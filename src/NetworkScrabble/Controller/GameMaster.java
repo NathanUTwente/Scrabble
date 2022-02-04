@@ -11,6 +11,7 @@ import NetworkScrabble.Utils.Exceptions.TileBagEmptyException;
 import NetworkScrabble.Utils.MoveChecker;
 import NetworkScrabble.View.TextBoardRepresentation;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class GameMaster {
@@ -136,18 +137,9 @@ public class GameMaster {
     public void gameEnd(){
         tui.displayScores(game.getScores());
         tui.displayResults(game);
-        if (playAgain(game)){
-            System.out.println("Players voted to play again, good luck");
-            setUpGame(game.getPlayers());
-        } else {
-            System.out.println("One or more players decided not to play again");
-        }
 
     }
 
-//    public void swapTiles(Player player, String tilesToSwap){
-//        player.removeTiles(tilesToRemove);
-//    }
 
 
     public String[] getTilesToRemove(String[] move){
@@ -183,6 +175,18 @@ public class GameMaster {
     }
 
     public boolean isGameOver() {
-        return gameOver = false;
+        boolean emptyDeck = false;
+        for (Player player : game.getPlayers()){
+            boolean empty = true;
+            for (Tile t : player.getTileDeck()){
+                if (t != null){
+                    empty = false;
+                }
+            }
+            if (empty){
+                emptyDeck = true;
+            }
+        }
+        return ((emptyDeck) && !(game.getTileBag().tilesLeftInBag() > 0));
     }
 }

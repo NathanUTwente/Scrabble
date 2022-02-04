@@ -129,4 +129,10 @@ public class ScrabbleClientHandler implements Runnable{
         out.println(messageOut);
         out.flush();
     }
+
+    public void broadcastGameOver(){
+        String messageOut = ProtocolMessages.GAMEOVER;
+        out.println(messageOut);
+        out.flush();
+    }
 }
