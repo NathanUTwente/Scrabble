@@ -86,11 +86,33 @@ public class ScrabbleServerHandler implements Runnable{
 
     public String[] getPlayers() throws IOException {
         String messageIn = in.readLine();
-        if (messageIn.split(ProtocolMessages.SEPARATOR)[0].equals(ProtocolMessages.HELLO)){
+        String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        if (messageSplit[0].equals(ProtocolMessages.HELLO)){
             if (messageIn.split(ProtocolMessages.SEPARATOR).length > 1){
-                return messageIn.split(ProtocolMessages.SEPARATOR)[1].split(" ");
+                return messageSplit[1].split(" ");
             }
         }
         return null;
+    }
+
+    public String waitForTurnBroadcast() throws IOException {
+        String messageIn = in.readLine();
+        System.out.println("Heard");
+        String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        if (messageSplit[0].equals(ProtocolMessages.TURN)){
+            return messageSplit[1];
+        } else {
+            return null;
+        }
+    }
+
+    public void sendMove(String[] move){
+        String messageOut = ProtocolMessages.MOVE + ProtocolMessages.SEPARATOR;
+        for (String part : move){
+            messageOut += part + " ";
+        }
+        out.println(messageOut);
+        out.flush();
+
     }
 }

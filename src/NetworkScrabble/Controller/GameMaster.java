@@ -151,7 +151,7 @@ public class GameMaster {
         return result;
     }
 
-    public boolean isGamOver() {
+    public boolean isGameOver() {
         return gamOver;
     }
 }

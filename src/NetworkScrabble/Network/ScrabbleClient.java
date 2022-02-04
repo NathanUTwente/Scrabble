@@ -17,6 +17,7 @@ public class ScrabbleClient {
     ScrabbleServerHandler serverHandler;
     Socket connection;
     GameSlave gameSlave;
+    boolean gameOver = false;
 
 
     public static void main(String[] args) {
@@ -26,6 +27,7 @@ public class ScrabbleClient {
         client.waitForReady();
         client.getPlayerNames();
         client.setUpGame();
+        client.play();
     }
 
     public void waitForTiles(){
@@ -90,6 +92,22 @@ public class ScrabbleClient {
             e.printStackTrace();
         }
 
+    }
+
+    public void play(){
+        while (!gameOver){
+            try {
+                String turn = serverHandler.waitForTurnBroadcast();
+                if (turn.equals(name)){
+                    String[] move = gameSlave.myMove();
+                    serverHandler.sendMove(move);
+                } else {
+                    //other player move
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

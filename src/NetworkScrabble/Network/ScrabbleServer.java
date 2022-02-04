@@ -4,13 +4,11 @@ import NetworkScrabble.Controller.GameMaster;
 import NetworkScrabble.Model.BoardModel.Tile;
 import NetworkScrabble.Model.PlayerModels.Player;
 import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
-import NetworkScrabble.Utils.Exceptions.TileBagEmptyException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
@@ -34,27 +32,34 @@ public class ScrabbleServer {
     }
 
     public void runGame(){
-        while (!gameMaster.isGamOver()){
+//        while (!gameMaster.isGameOver()){
+            runTurn();
+            runTurn();
             runTurn();
 
-        }
+//        }
     }
 
     public void runTurn(){
         Player currentPlayer = gameMaster.getCurrentPlayer();
+        broadcastTurn(currentPlayer);
+        System.out.println("To here");
         String[] move = getCurrentMove(currentPlayer);
-        int processedMove = 0;
-        try {
-            processedMove = processMove(move);
-        } catch (InvalidMoveException e) {
-            e.printStackTrace();
+        for (String m : move){
+            System.out.println(m);
         }
-        if (processedMove == -500){
-            int earnedPoints = gameMaster.endOfMove(currentPlayer, move);
-            sendEndOfTurn(move, earnedPoints, currentPlayer);
-        } else {
-            //player swapped
-        }
+//        int processedMove = 0;
+//        try {
+//            processedMove = processMove(move);
+//        } catch (InvalidMoveException e) {
+//            e.printStackTrace();
+//        }
+//        if (processedMove == -500){
+//            int earnedPoints = gameMaster.endOfMove(currentPlayer, move);
+//            sendEndOfTurn(move, earnedPoints, currentPlayer);
+//        } else {
+//            //player swapped
+//        }
 
 
     }
@@ -63,7 +68,18 @@ public class ScrabbleServer {
 
     }
 
+    public void broadcastTurn(Player player){
+        for (ScrabbleClientHandler clientHandler : clients){
+            clientHandler.broadcastTurn(player.getName());
+        }
+    }
+
     public String[] getCurrentMove(Player player){
+        try {
+            return nameHandlers.get(player.getName()).getTurnMove();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

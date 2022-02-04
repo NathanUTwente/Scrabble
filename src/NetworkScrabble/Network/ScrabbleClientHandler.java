@@ -81,4 +81,26 @@ public class ScrabbleClientHandler implements Runnable{
         out.println(messageOut);
         out.flush();
     }
+
+    public void broadcastTurn(String name){
+        String messageOut = ProtocolMessages.TURN + ProtocolMessages.SEPARATOR;
+        messageOut += name;
+        out.println(messageOut);
+        out.flush();
+    }
+
+    public String[] getTurnMove() throws IOException {
+        String[] move = new String[3];
+        String messageIn = in.readLine();
+        System.out.println("Heard");
+        String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        if (messageSplit[0].equals(ProtocolMessages.MOVE)){
+            int i = 0;
+            for (String part : messageSplit[1].split(" ")){
+                move[i] = part;
+                i++;
+            }
+        }
+        return move;
+    }
 }

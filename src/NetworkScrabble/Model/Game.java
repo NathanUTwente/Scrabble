@@ -24,7 +24,7 @@ public class Game {
             scores.put(player, 0);
         }
         Random random = new Random();
-        int randomOrder = random.nextInt(2);
+        int randomOrder = random.nextInt(this.players.length);
         playerTurn = randomOrder;
     }
 
