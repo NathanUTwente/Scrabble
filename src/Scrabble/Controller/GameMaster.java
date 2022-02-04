@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class GameMaster {
 
+
     private Game game;
     private TextBoardRepresentation tui;
     private MoveChecker moveChecker;

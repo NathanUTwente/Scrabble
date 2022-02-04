@@ -4,12 +4,16 @@ import NetworkScrabble.Controller.GameMaster;
 import NetworkScrabble.Model.BoardModel.Tile;
 import NetworkScrabble.Model.PlayerModels.Player;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
 public class ScrabbleServer {
@@ -23,6 +27,9 @@ public class ScrabbleServer {
     GameMaster gameMaster;
     HashMap<String, ScrabbleClientHandler> nameHandlers = new HashMap<>();
     HashMap<String, Player> namePlayers = new HashMap<>();
+    BufferedReader in;
+    PrintWriter out;
+    final Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
         ScrabbleServer scrabbleServer = new ScrabbleServer();
@@ -78,6 +85,8 @@ public class ScrabbleServer {
             System.out.println("Listening on port " + listener.getLocalPort());
             while (count < 1) {
                 connection = listener.accept();
+                out = new PrintWriter(connection.getOutputStream());
+                in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 clients.add(new ScrabbleClientHandler(connection));
                 count++;
             }

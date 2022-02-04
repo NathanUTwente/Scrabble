@@ -3,7 +3,6 @@ package Scrabble.View;
 import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.Game;
-import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.Model.TileBag;
 import Scrabble.Utils.Exceptions.InvalidAnswerException;
@@ -160,7 +159,6 @@ public class TextBoardRepresentation {
             for (String m : lettersInputed.keySet()){
                 if (lettersTilebag.containsKey(m)){
                     if (lettersInputed.get(m) > lettersTilebag.get(m)){
-                        System.out.println("you don't have the facilities for that big man.");
                         return false;
                     }
                 } else {
