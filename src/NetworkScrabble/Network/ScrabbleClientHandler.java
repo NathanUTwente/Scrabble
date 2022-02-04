@@ -1,5 +1,7 @@
 package NetworkScrabble.Network;
 
+import NetworkScrabble.Model.PlayerModels.Player;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -102,5 +104,15 @@ public class ScrabbleClientHandler implements Runnable{
             }
         }
         return move;
+    }
+
+    public void sendMoveConfirm(String[] move, int earnedPoints, Player currentPlayer){
+        String messageOut = ProtocolMessages.MOVE + ProtocolMessages.SEPARATOR + currentPlayer.getName() + ProtocolMessages.SEPARATOR;
+        for (String part : move){
+            messageOut +=part + " ";
+        }
+        messageOut += ProtocolMessages.SEPARATOR + earnedPoints;
+        out.println(messageOut);
+        out.flush();
     }
 }

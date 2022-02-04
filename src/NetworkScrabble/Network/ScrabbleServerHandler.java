@@ -75,6 +75,7 @@ public class ScrabbleServerHandler implements Runnable{
         String[] tiles;
         String messageIn = in.readLine();
         String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        System.out.println(messageIn);
         if (messageSplit[0].equals(ProtocolMessages.TILES)){
             tiles = messageSplit[1].split(" ");
             return tiles;
@@ -113,6 +114,21 @@ public class ScrabbleServerHandler implements Runnable{
         }
         out.println(messageOut);
         out.flush();
+
+    }
+
+    public String[] waitForMoveConfirmation() throws IOException {
+        String messageIn = in.readLine();
+        System.out.println(messageIn);
+        String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        if (messageSplit[0].equals(ProtocolMessages.MOVE)){
+            String[] move = new String[3];
+            for (int i = 1; i < messageSplit.length; i++){
+                move[i - 1] = messageSplit[i];
+            }
+            return move;
+        }
+        return null;
 
     }
 }

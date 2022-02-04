@@ -54,6 +54,8 @@ public class GameSlave {
     public void myMoveConfirmed(int points, String[] move){
         game.updatePoints(myPlayer, points);
         myPlayer.removeTiles(getTilesToRemove(move));
+        game.playMove(move);
+        System.out.println("Somehow made it");
     }
 
     public void otherTurnInProgress(){

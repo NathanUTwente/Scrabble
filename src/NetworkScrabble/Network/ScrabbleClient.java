@@ -101,13 +101,27 @@ public class ScrabbleClient {
                 if (turn.equals(name)){
                     String[] move = gameSlave.myMove();
                     serverHandler.sendMove(move);
+
                 } else {
                     //other player move
                 }
+                String[] confirmedMove = waitForMoveConfirmation();
+                for (String part : confirmedMove){
+                    System.out.println(part);
+                }
+                if (confirmedMove[0].equals(name)){
+                    String[] move = confirmedMove[1].split(" ");
+                    gameSlave.myMoveConfirmed((int) Integer.parseInt(confirmedMove[2]), move);
+                }
+                waitForTiles();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String[] waitForMoveConfirmation() throws IOException {
+        return serverHandler.waitForMoveConfirmation();
     }
 
 

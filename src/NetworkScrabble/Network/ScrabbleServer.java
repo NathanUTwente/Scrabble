@@ -48,24 +48,29 @@ public class ScrabbleServer {
         for (String m : move){
             System.out.println(m);
         }
-//        int processedMove = 0;
-//        try {
-//            processedMove = processMove(move);
-//        } catch (InvalidMoveException e) {
-//            e.printStackTrace();
-//        }
-//        if (processedMove == -500){
-//            int earnedPoints = gameMaster.endOfMove(currentPlayer, move);
-//            sendEndOfTurn(move, earnedPoints, currentPlayer);
-//        } else {
-//            //player swapped
-//        }
+        int processedMove = 0;
+        try {
+            processedMove = processMove(move);
+        } catch (InvalidMoveException e) {
+            e.printStackTrace();
+        }
+        System.out.println(processedMove);
+        if (processedMove == -500){
+            int earnedPoints = gameMaster.endOfMove(currentPlayer, move);
+            sendEndOfTurn(move, earnedPoints, currentPlayer);
+            //remove tiles played
+            sendNewTiles(currentPlayer, move);
+        } else {
+            //player swapped
+        }
 
 
     }
 
     public void sendEndOfTurn(String[] move, int earnedPoints, Player currentPlayer){
-
+        for (ScrabbleClientHandler clientHandler : clients){
+            clientHandler.sendMoveConfirm(move, earnedPoints, currentPlayer);
+        }
     }
 
     public void broadcastTurn(Player player){
@@ -130,7 +135,15 @@ public class ScrabbleServer {
             handler.sendTiles(tileStrings);
         }
         System.out.println(nameHandlers.keySet().equals(namePlayers.keySet()));
+    }
 
+    public void sendNewTiles(Player currentPlayer, String[] move){
+        ArrayList<Tile> tiles = gameMaster.getNewTiles(currentPlayer, move);
+        String[] tileStrings = new String[tiles.size()];
+        for (int i = 0; i < tiles.size(); i++){
+            tileStrings[i] = tiles.get(i).getTileLetter();
+        }
+        nameHandlers.get(currentPlayer.getName()).sendTiles(tileStrings);
 
     }
 

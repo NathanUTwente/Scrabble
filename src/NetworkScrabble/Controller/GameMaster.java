@@ -54,10 +54,32 @@ public class GameMaster {
         return lastPoints;
     }
 
-    public ArrayList<Tile> getNewTiles(Player currentPlayer){
+    public ArrayList<Tile> getNewTiles(Player currentPlayer, String[] move){
         if (game.getTileBag().tilesLeftInBag() > 0) {
-        ArrayList<Tile> newTiles = game.getTileBag().getTilesForPlayer(currentPlayer);
-        return newTiles;
+            String[] toRemove = getTilesToRemove(move);
+            System.out.println("Being removed");
+            for (String s : toRemove){
+                System.out.println(s);
+            }
+            System.out.println("Before");
+            for (Tile t : currentPlayer.getTileDeck()){
+                System.out.println(t.getTileLetter());
+            }
+            currentPlayer.removeTiles(toRemove);
+            System.out.println("Aftr");
+            for (Tile t : currentPlayer.getTileDeck()){
+                if (t != null) {
+                    System.out.println(t.getTileLetter());
+                }
+            }
+            System.out.println(currentPlayer.getTileDeck().length);
+            ArrayList<Tile> newTiles = game.getTileBag().getTilesForPlayer(currentPlayer);
+            System.out.println("This many to give");
+            for (Tile t : newTiles){
+                System.out.println(t.getTileLetter());
+            }
+            currentPlayer.giveTiles(newTiles);
+            return newTiles;
     } else {
         System.out.println("The tile bag is now empty, no more tile swaps are possible");
     }
@@ -121,14 +143,15 @@ public class GameMaster {
 
 
     public String[] getTilesToRemove(String[] move){
-        String[] toRemoveFromPlayer = new String[move[2].length()];
+        ArrayList<String> temp = new ArrayList<>();
         for (String l : move[2].split("")){
-            for (int i = 0; i < toRemoveFromPlayer.length; i++){
-                if (toRemoveFromPlayer[i] == null){
-                    toRemoveFromPlayer[i] = l;
-                    break;
-                }
+            if (!l.equals(".")){
+                temp.add(l);
             }
+        }
+        String[] toRemoveFromPlayer = new String[temp.size()];
+        for (int i = 0; i < toRemoveFromPlayer.length; i++){
+            toRemoveFromPlayer[i] = temp.get(i);
         }
         return toRemoveFromPlayer;
     }
