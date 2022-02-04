@@ -1,5 +1,7 @@
 package NetworkScrabble.Network;
 
+import NetworkScrabble.Model.PlayerModels.Player;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -78,6 +80,58 @@ public class ScrabbleClientHandler implements Runnable{
         for (String tile : tiles){
             messageOut += tile + " ";
         }
+        out.println(messageOut);
+        out.flush();
+    }
+
+    public void broadcastTurn(String name){
+        String messageOut = ProtocolMessages.TURN + ProtocolMessages.SEPARATOR;
+        messageOut += name;
+        out.println(messageOut);
+        out.flush();
+    }
+
+    public void broadcastPass(String name){
+        String messageOut = ProtocolMessages.PASS + ProtocolMessages.SEPARATOR;
+        messageOut += name;
+        out.println(messageOut);
+        out.flush();
+    }
+
+    public String[] getTurnMove() throws IOException {
+        String[] move = new String[3];
+        String messageIn = in.readLine();
+        String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        if (messageSplit[0].equals(ProtocolMessages.MOVE)){
+            int i = 0;
+            for (String part : messageSplit[1].split(" ")){
+                move[i] = part;
+                i++;
+            }
+        } else if (messageSplit[0].equals(ProtocolMessages.PASS)){
+            return messageSplit;
+        }
+        return move;
+    }
+
+    public void sendMoveConfirm(String[] move, int earnedPoints, Player currentPlayer){
+        String messageOut = ProtocolMessages.MOVE + ProtocolMessages.SEPARATOR + currentPlayer.getName() + ProtocolMessages.SEPARATOR;
+        for (String part : move){
+            messageOut +=part + " ";
+        }
+        messageOut += ProtocolMessages.SEPARATOR + earnedPoints;
+        out.println(messageOut);
+        out.flush();
+    }
+
+    public void sendInvalidMove(){
+        String messageOut = ProtocolMessages.ERROR+ ProtocolMessages.SEPARATOR + ProtocolMessages.INVALID_MOVE;
+        out.println(messageOut);
+        out.flush();
+    }
+
+    public void broadcastGameOver(){
+        String messageOut = ProtocolMessages.GAMEOVER;
         out.println(messageOut);
         out.flush();
     }

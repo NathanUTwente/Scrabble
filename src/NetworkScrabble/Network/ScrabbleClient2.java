@@ -1,9 +1,6 @@
 package NetworkScrabble.Network;
 
 import NetworkScrabble.Controller.GameSlave;
-import NetworkScrabble.Model.BoardModel.Tile;
-import NetworkScrabble.Model.TileBag;
-import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
 import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
 
 import java.io.IOException;
@@ -11,8 +8,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 import static java.lang.System.in;
-
-public class ScrabbleClient {
+//A second client to play with, identical to other one
+public class ScrabbleClient2 {
 
     static final int DEFAULT_PORT = 8028;
     private String name;
@@ -25,7 +22,7 @@ public class ScrabbleClient {
 
 
     public static void main(String[] args) {
-        ScrabbleClient client = new ScrabbleClient();
+        ScrabbleClient2 client = new ScrabbleClient2();
         client.getName();
         client.connectToServer();
         client.waitForReady();

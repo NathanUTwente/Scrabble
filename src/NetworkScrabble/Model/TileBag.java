@@ -11,6 +11,9 @@ public class TileBag {
     public ArrayList<Tile> tileList;
     final private ArrayList<Tile> tileBag;
 
+    public void addToBag(Tile tile){
+        tileBag.add(tile);
+    }
 
     public TileBag(){
         tileList = new ArrayList<>();

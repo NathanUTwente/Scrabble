@@ -56,7 +56,7 @@ public class TextBoardRepresentation {
                 input = line.toUpperCase(Locale.ROOT).split(" ");
                 if (input.length == 1){
                     if (input[0].equals("SKIP")){
-                        return new String[]{"SKIP", swapTiles(player)};
+                        return new String[]{"PASS", swapTiles(player)};
                     } else {
                         throw new InvalidAnswerException("If you wish to skip your turn and replace tile(s) please type \"skip\" (Upper or lowercase is irrelevant)\nYou will be asked which tiles to swap next after");
                     }
@@ -271,15 +271,17 @@ public class TextBoardRepresentation {
         }
 
         public String swapTiles(Player player){
-            System.out.println("Which tiles would you like to replace, you must replace at least one\nPlease type just the letters you wish to swap with no spacing\nE.g \"abc\"");
+            System.out.println("Which tiles would you like to replace, if any\nPlease type just the letters you wish to swap with no spacing\nE.g \"abc\"\nIf you do not wish to replace tiles please type \"skip\" again");
             Scanner scanner = new Scanner(in);
             while (scanner.hasNextLine()){
                 String toSwap = scanner.nextLine().toUpperCase(Locale.ROOT);
                 try {
                     if (!(toSwap.length() > 0)){
-                        throw new InvalidAnswerException("Invalid response, which tile(s) would you like to swap");
+                        throw new InvalidAnswerException("Invalid response, type \"skip\" or whichever tile(s) would you like to swap");
                     } else {
-                        if (playerHasLetters(player, new String[]{"", "", toSwap})){
+                        if (toSwap.equals("SKIP")){
+                            return "";
+                        }else if (playerHasLetters(player, new String[]{"", "", toSwap})){
                             return toSwap;
                         } else {
                             throw new InvalidAnswerException("You do not have all letters selected, please enter your choice again");

@@ -1,5 +1,8 @@
 package NetworkScrabble.Network;
 
+import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
+import Scrabble.Utils.Exceptions.InvalidMoveException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,7 +54,7 @@ public class ScrabbleServerHandler implements Runnable{
     public void waitForReady() throws IOException {
             String messageIn = in.readLine();
             if (messageIn.equals(ProtocolMessages.SERVERREADY)) {
-                System.out.println("You ready for a game?");
+                System.out.println("Are you ready for a game?\nType \'Y\' when ready");
                 Scanner scanner = new Scanner(System.in);
                 while (scanner.hasNextLine()) {
                     if (scanner.nextLine().equals("Y")) {
@@ -63,13 +66,6 @@ public class ScrabbleServerHandler implements Runnable{
                 }
             }
     }
-
-//    public void waitForGame() throws IOException {
-//        String messageIn = in.readLine();
-//        if (){
-//
-//        }
-//    }
 
     public String[] waitForTiles() throws IOException {
         String[] tiles;
@@ -86,11 +82,62 @@ public class ScrabbleServerHandler implements Runnable{
 
     public String[] getPlayers() throws IOException {
         String messageIn = in.readLine();
-        if (messageIn.split(ProtocolMessages.SEPARATOR)[0].equals(ProtocolMessages.HELLO)){
+        String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        if (messageSplit[0].equals(ProtocolMessages.HELLO)){
             if (messageIn.split(ProtocolMessages.SEPARATOR).length > 1){
-                return messageIn.split(ProtocolMessages.SEPARATOR)[1].split(" ");
+                return messageSplit[1].split(" ");
             }
         }
         return null;
+    }
+
+    public String waitForTurnBroadcast() throws IOException {
+        String messageIn = in.readLine();
+        String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        if (messageSplit[0].equals(ProtocolMessages.TURN)){
+            return messageSplit[1];
+        } else if (messageSplit[0].equals(ProtocolMessages.PASS)){
+            return "PASS";
+        } else {
+            return null;
+        }
+    }
+
+    public void sendMove(String[] move){
+        String messageOut = ProtocolMessages.MOVE + ProtocolMessages.SEPARATOR;
+        for (String part : move){
+            messageOut += part + " ";
+        }
+        out.println(messageOut);
+        out.flush();
+
+    }
+
+    public String[] waitForMoveConfirmation() throws IOException, InvalidNetworkMoveException {
+        String messageIn = in.readLine();
+        String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        if (messageSplit[0].equals(ProtocolMessages.MOVE)){
+            String[] move = new String[3];
+            for (int i = 1; i < messageSplit.length; i++){
+                move[i - 1] = messageSplit[i];
+            }
+            return move;
+        } else if ((messageSplit[0].equals(ProtocolMessages.ERROR)) && (messageSplit[1].equals(ProtocolMessages.INVALID_MOVE))){
+            throw new InvalidNetworkMoveException("Your move was invalid, you dont get any points and you lose your turn");
+        }
+        return null;
+
+    }
+
+    public void sendSkip(String[] move){
+        String messageOut = ProtocolMessages.PASS;
+        if (move[1].length() > 0){
+            messageOut += ProtocolMessages.SEPARATOR;
+            for (String s : move[1].split("")){
+                messageOut += s + " ";
+            }
+        }
+        out.println(messageOut);
+        out.flush();
     }
 }

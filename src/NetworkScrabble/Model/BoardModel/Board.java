@@ -217,26 +217,30 @@ public class Board {
             for (String eachLetter : letters.split("")) {
                 //CONDENSE NEXT BIT, NO NEED SEPARATE
                 if (direction.equals("RIGHT")) {
-                    if (eachLetter.equals(".")) {
-                        if (board.isEmpty(location[0] + addition, location[1])){
-                            //If fullstop is used in wrong place
-                            moveToReturn[4] = "F";
-                            break;
+                    if (board.isField(location[0] + addition, location[1])) {
+                        if (eachLetter.equals(".")) {
+                            if (board.isEmpty(location[0] + addition, location[1])) {
+                                //If fullstop is used in wrong place
+                                moveToReturn[4] = "F";
+                                break;
+                            }
+                            addition++;
+                            continue;
                         }
-                        addition++;
-                        continue;
+                        board.setField(location[0] + addition, location[1], new Tile(TileBag.stringToTile(eachLetter), 1));
                     }
-                    board.setField(location[0] + addition, location[1], new Tile(TileBag.stringToTile(eachLetter), 1));
                 } else {
-                    if (eachLetter.equals(".")) {
-                        if (board.isEmpty(location[0], location[1] + addition)) {
-                            moveToReturn[4] = "F";
-                            break;
+                    if (board.isField(location[0] + addition, location[1])) {
+                        if (eachLetter.equals(".")) {
+                            if (board.isEmpty(location[0], location[1] + addition)) {
+                                moveToReturn[4] = "F";
+                                break;
+                            }
+                            addition++;
+                            continue;
                         }
-                        addition++;
-                        continue;
+                        board.setField(location[0], location[1] + addition, new Tile(TileBag.stringToTile(eachLetter), 1));
                     }
-                    board.setField(location[0], location[1] + addition, new Tile(TileBag.stringToTile(eachLetter), 1));
                 }
                 addition++;
             }
