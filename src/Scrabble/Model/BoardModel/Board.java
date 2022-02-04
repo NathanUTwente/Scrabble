@@ -10,15 +10,6 @@ public class Board {
     // Square[column][row]
     private Square[][] field;
 
-//    public static void main(String[] args) {
-//        Board board = new Board();
-//        for (int col = 0; col < DIM; col++){
-//            for (int row = 0; row < DIM; row++){
-//                System.out.println(board.field[col][row].toString());;
-//            }
-//        }
-//    }
-
     /**
      * Constructs a board with a playing field of 15x15 Squares with special squares included
      * @ensures all squares are empty

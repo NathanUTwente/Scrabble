@@ -1,10 +1,6 @@
 package Scrabble.Model;
-
-
 import Scrabble.Model.BoardModel.Tile;
-import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
-
 import java.util.ArrayList;
 import java.util.Random;
 

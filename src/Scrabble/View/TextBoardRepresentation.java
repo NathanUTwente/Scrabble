@@ -20,14 +20,7 @@ public class TextBoardRepresentation {
     private final String[] POSITIONS = new String[]{"1st", "2nd", "3rd", "4th"};
 
     public static void main(String[] args) {
-        //Display Scores Test
-        TextBoardRepresentation tui = new TextBoardRepresentation();
-        HashMap<Player, Integer> scores = new HashMap<>();
-        scores.put(new HumanPlayer("Bob"), 87);
-        scores.put(new HumanPlayer("Rob"), 15);
-        scores.put(new HumanPlayer("Tim"), 112);
-        scores.put(new HumanPlayer("Jim"), 3);
-        tui.displayScores(scores);
+
     }
 
     /**
@@ -46,7 +39,7 @@ public class TextBoardRepresentation {
      * @return the move instructions parsed into a string array
      */
     public String[] getMove(Player player, Board board) {
-        System.out.println(player.getName() + " please enter your move.\nIn the form [Start Column][Start row] [Direction] [Word]\nEg. F6 RIGHT HELLO\n'_' represents a blank tile\nOr type skip to skip your turn and exchange tiles");
+        System.out.println(player.getName() + " please enter your move.\nIn the form [Start Column][Start row] [Direction] [Word]\nEg. F6 RIGHT HELLO\n '_' represents a blank tile");
         Scanner scanner = new Scanner(in);
         String[] input;
         String line = "";
@@ -54,13 +47,6 @@ public class TextBoardRepresentation {
             try {
                 line = scanner.nextLine();
                 input = line.toUpperCase(Locale.ROOT).split(" ");
-                if (input.length == 1){
-                    if (input[0].equals("SKIP")){
-                        return new String[]{"SKIP", swapTiles(player)};
-                    } else {
-                        throw new InvalidAnswerException("If you wish to skip your turn and replace tile(s) please type \"skip\" (Upper or lowercase is irrelevant)\nYou will be asked which tiles to swap next after");
-                    }
-                }
                 if (checkFormat(input)) {
                     if (playerHasLetters(player, input)) {
                         if (input[2].contains("_")) {
@@ -74,7 +60,7 @@ public class TextBoardRepresentation {
                 } else {
                     throw new WrongFormatException("Wrong format, please retype your move");
                 }
-            } catch (InvalidMoveException | InvalidAnswerException e){
+            } catch (InvalidMoveException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -151,9 +137,9 @@ public class TextBoardRepresentation {
 
 
     public boolean playerHasLetters(Player player, String[] move) {
-        Tile[] tileDeckClone = player.cloneOfTiledeck();
+        Tile[] tileBagClone = player.cloneOfTiledeck();
         HashMap<String, Integer> lettersInputed = new HashMap<>();
-        HashMap<String, Integer> lettersTileDeck = new HashMap<>();
+        HashMap<String, Integer> lettersTilebag = new HashMap<>();
         String[] moveSplit = move[2].split("");
         for (String l : moveSplit) {
             if (!lettersInputed.containsKey(l)) {
@@ -162,18 +148,18 @@ public class TextBoardRepresentation {
                 lettersInputed.put(l, lettersInputed.get(l) + 1);
             }
         }
-        for (Tile t : tileDeckClone) {
+        for (Tile t : tileBagClone) {
             String l = t.getTileLetter();
-            if (!lettersTileDeck.containsKey(l)) {
-                lettersTileDeck.put(l, 1);
+            if (!lettersTilebag.containsKey(l)) {
+                lettersTilebag.put(l, 1);
             } else {
-                lettersTileDeck.put(l, lettersTileDeck.get(l) + 1);
+                lettersTilebag.put(l, lettersTilebag.get(l) + 1);
             }
         }
 
             for (String m : lettersInputed.keySet()){
-                if (lettersTileDeck.containsKey(m)){
-                    if (lettersInputed.get(m) > lettersTileDeck.get(m)){
+                if (lettersTilebag.containsKey(m)){
+                    if (lettersInputed.get(m) > lettersTilebag.get(m)){
                         System.out.println("you don't have the facilities for that big man.");
                         return false;
                     }
@@ -268,27 +254,5 @@ public class TextBoardRepresentation {
                 }
             }
             return false;
-        }
-
-        public String swapTiles(Player player){
-            System.out.println("Which tiles would you like to replace, you must replace at least one\nPlease type just the letters you wish to swap with no spacing\nE.g \"abc\"");
-            Scanner scanner = new Scanner(in);
-            while (scanner.hasNextLine()){
-                String toSwap = scanner.nextLine().toUpperCase(Locale.ROOT);
-                try {
-                    if (!(toSwap.length() > 0)){
-                        throw new InvalidAnswerException("Invalid response, which tile(s) would you like to swap");
-                    } else {
-                        if (playerHasLetters(player, new String[]{"", "", toSwap})){
-                            return toSwap;
-                        } else {
-                            throw new InvalidAnswerException("You do not have all letters selected, please enter your choice again");
-                        }
-                    }
-                } catch (InvalidAnswerException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-            return null;
         }
 }
