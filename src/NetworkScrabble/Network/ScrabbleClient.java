@@ -103,7 +103,7 @@ public class ScrabbleClient {
                     serverHandler.sendMove(move);
 
                 } else {
-                    //other player move
+                    gameSlave.otherTurnInProgress(turn);
                 }
                 String[] confirmedMove = waitForMoveConfirmation();
                 for (String part : confirmedMove){
@@ -112,8 +112,10 @@ public class ScrabbleClient {
                 if (confirmedMove[0].equals(name)){
                     String[] move = confirmedMove[1].split(" ");
                     gameSlave.myMoveConfirmed((int) Integer.parseInt(confirmedMove[2]), move);
+                    waitForTiles();
+                } else {
+                    gameSlave.otherTurnDone(confirmedMove[1].split(" "), (int) Integer.parseInt(confirmedMove[2]), confirmedMove[0]);
                 }
-                waitForTiles();
             } catch (IOException e) {
                 e.printStackTrace();
             }

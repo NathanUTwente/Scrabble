@@ -58,8 +58,8 @@ public class GameSlave {
         System.out.println("Somehow made it");
     }
 
-    public void otherTurnInProgress(){
-        //something like player x is currently playing their move
+    public void otherTurnInProgress(String name){
+        System.out.println("Player " + name + " is currently playing, please wait");
     }
 
     public void otherTurnDone(String[] move, int points, String playerName){

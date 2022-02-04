@@ -10,7 +10,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
+
+import static java.lang.System.in;
 
 public class ScrabbleServer {
 
@@ -23,12 +26,21 @@ public class ScrabbleServer {
     GameMaster gameMaster;
     HashMap<String, ScrabbleClientHandler> nameHandlers = new HashMap<>();
     HashMap<String, Player> namePlayers = new HashMap<>();
+    int players;
 
     public static void main(String[] args) {
-        ScrabbleServer scrabbleServer = new ScrabbleServer();
+        Scanner scanner = new Scanner(in);
+        System.out.println("How many players in game?");
+        int players = scanner.nextInt();
+        scanner.close();
+        ScrabbleServer scrabbleServer = new ScrabbleServer(players);
         scrabbleServer.setUpServer();
         scrabbleServer.setUpGame();
         scrabbleServer.runGame();
+    }
+
+    public ScrabbleServer(int players) {
+        this.players = players;
     }
 
     public void runGame(){
@@ -101,7 +113,7 @@ public class ScrabbleServer {
 
 
     public void setUpServer(){
-        startScrabbleServer();
+        startScrabbleServer(players);
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
@@ -148,12 +160,12 @@ public class ScrabbleServer {
     }
 
 
-    public void startScrabbleServer(){
+    public void startScrabbleServer(int players){
         int count = 0;
         try {
             listener = new ServerSocket(DEFAULT_PORT);
             System.out.println("Listening on port " + listener.getLocalPort());
-            while (count < 1) {
+            while (count < players) {
                 connection = listener.accept();
                 clients.add(new ScrabbleClientHandler(connection));
                 count++;
@@ -165,7 +177,7 @@ public class ScrabbleServer {
         }
 
         int count2 = 0;
-        countDownLatch = new CountDownLatch(count);
+        countDownLatch = new CountDownLatch(players);
         for (ScrabbleClientHandler scrabbleHandler : clients) {
             Thread thread = new Thread(scrabbleHandler, "Thread " + count2);
             scrabbleHandler.setCountDownLatch(countDownLatch);
