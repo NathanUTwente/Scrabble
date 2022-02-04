@@ -3,6 +3,8 @@ package NetworkScrabble.Network;
 import NetworkScrabble.Controller.GameMaster;
 import NetworkScrabble.Model.BoardModel.Tile;
 import NetworkScrabble.Model.PlayerModels.Player;
+import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
+import NetworkScrabble.Utils.Exceptions.TileBagEmptyException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -28,6 +30,52 @@ public class ScrabbleServer {
         ScrabbleServer scrabbleServer = new ScrabbleServer();
         scrabbleServer.setUpServer();
         scrabbleServer.setUpGame();
+        scrabbleServer.runGame();
+    }
+
+    public void runGame(){
+        while (!gameMaster.isGamOver()){
+            runTurn();
+
+        }
+    }
+
+    public void runTurn(){
+        Player currentPlayer = gameMaster.getCurrentPlayer();
+        String[] move = getCurrentMove(currentPlayer);
+        int processedMove = 0;
+        try {
+            processedMove = processMove(move);
+        } catch (InvalidMoveException e) {
+            e.printStackTrace();
+        }
+        if (processedMove == -500){
+            int earnedPoints = gameMaster.endOfMove(currentPlayer, move);
+            sendEndOfTurn(move, earnedPoints, currentPlayer);
+        } else {
+            //player swapped
+        }
+
+
+    }
+
+    public void sendEndOfTurn(String[] move, int earnedPoints, Player currentPlayer){
+
+    }
+
+    public String[] getCurrentMove(Player player){
+        return null;
+    }
+
+    public int processMove(String[] move) throws InvalidMoveException {
+            if (move[0].equals("SKIP")) {
+                //can throw tilebagemptyexception
+                return gameMaster.swapTiles(move);
+            } else {
+                //can throw invalidmoveexception
+                gameMaster.isMoveValid(move);
+                return -500;
+            }
     }
 
 

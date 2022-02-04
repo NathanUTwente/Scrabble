@@ -4,18 +4,21 @@ import NetworkScrabble.Model.BoardModel.Tile;
 import NetworkScrabble.Model.Game;
 import NetworkScrabble.Model.PlayerModels.HumanPlayer;
 import NetworkScrabble.Model.PlayerModels.Player;
+import NetworkScrabble.Model.TileBag;
 import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
 import NetworkScrabble.Utils.Exceptions.TileBagEmptyException;
 import NetworkScrabble.Utils.MoveChecker;
 import NetworkScrabble.View.TextBoardRepresentation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GameMaster {
 
     private Game game;
     private TextBoardRepresentation tui;
     private MoveChecker moveChecker;
+    private boolean gamOver = false;
 
     public static void main(String[] args) {
         GameMaster gameMaster = new GameMaster();
@@ -38,46 +41,70 @@ public class GameMaster {
             player.giveTiles(game.getTileBag().getTilesForPlayer(player));
         }
     }
+    public Player getCurrentPlayer(){
+        Player currentPlayer = game.getNextPlayer();
+        tui.update(game.getBoard());
+        return currentPlayer;
+    }
+
+    public int endOfMove(Player currentPlayer, String[] move){
+        game.playMove(move);
+        int lastPoints = moveChecker.getLastMovePoints();
+        game.updatePoints(currentPlayer, lastPoints);
+        return lastPoints;
+    }
+
+    public ArrayList<Tile> getNewTiles(Player currentPlayer){
+        if (game.getTileBag().tilesLeftInBag() > 0) {
+        ArrayList<Tile> newTiles = game.getTileBag().getTilesForPlayer(currentPlayer);
+        return newTiles;
+    } else {
+        System.out.println("The tile bag is now empty, no more tile swaps are possible");
+    }
+        return null;
+    }
 
     public void runGame(){
-        while (!game.gameOver()){
-            Player currentPlayer = game.getNextPlayer();
-            tui.update(game.getBoard());
-            tui.updatePlayerDeck(currentPlayer);
-            String[] move = null;
-            boolean skip = false;
-            boolean validMove = false;
-            while (!validMove){
-                try {
-                    move = currentPlayer.determineMove(game.getBoard(), tui);
-                    if (move[0].equals("SKIP")){
-                        if (game.getTileBag().tilesLeftInBag() > 0) {
-                            swapTiles(currentPlayer, move[1]);
-                            skip = true;
-                        } else {
-                            throw new TileBagEmptyException("The tile bag is empty, you cannot swap tiles");
-                        }
-                    } else {
-                        moveChecker.checkMove(move, game.getBoard());
-                    }
-                    validMove = true;
-                } catch (InvalidMoveException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-            if (!skip) {
-                currentPlayer.removeTiles(getTilesToRemove(move));
-                game.playMove(move);
-                game.updatePoints(currentPlayer, moveChecker.getLastMovePoints());
-            }
-            if (game.getTileBag().tilesLeftInBag() > 0) {
-                ArrayList<Tile> newTiles = game.getTileBag().getTilesForPlayer(currentPlayer);
-                currentPlayer.giveTiles(newTiles);
-            } else {
-                System.out.println("The tile bag is now empty, no more tile swaps are possible");
-            }
-            tui.displayScores(game.getScores());
+        while (!game.gameOver()) {
+//            tui.updatePlayerDeck(currentPlayer);
+
+//            if (!skip) {
+//                currentPlayer.removeTiles(getTilesToRemove(move));
+//            }
+
         }
+        gameEnd();
+    }
+
+    public void processMove(Player currentPlayer, String[] move){
+//        boolean skip = false;
+        boolean validMove = false;
+        while (!validMove) {
+
+        }
+    }
+
+    public boolean isMoveValid(String[] move) throws InvalidMoveException {
+        moveChecker.checkMove(move, game.getBoard());
+        return true;
+    }
+
+    public int swapTiles(String[] move) throws TileBagEmptyException {
+        if (game.getTileBag().tilesLeftInBag() > 0) {
+            String[] tilesToRemove = getTilesToRemove(move);
+            for (String t : tilesToRemove){
+                game.getTileBag().addToBag(new Tile(TileBag.stringToTile(t), TileBag.GetPointOfTile(t)));
+            }
+            return tilesToRemove.length;
+
+    } else {
+        throw new TileBagEmptyException("The tile bag is empty, you cannot swap tiles");
+    }
+    }
+
+
+    public void gameEnd(){
+        tui.displayScores(game.getScores());
         tui.displayResults(game);
         if (playAgain(game)){
             System.out.println("Players voted to play again, good luck");
@@ -85,12 +112,12 @@ public class GameMaster {
         } else {
             System.out.println("One or more players decided not to play again");
         }
+
     }
 
-    public void swapTiles(Player player, String tilesToSwap){
-        String[] tilesToRemove = getTilesToRemove(new String[]{"", "", tilesToSwap});
-        player.removeTiles(tilesToRemove);
-    }
+//    public void swapTiles(Player player, String tilesToSwap){
+//        player.removeTiles(tilesToRemove);
+//    }
 
 
     public String[] getTilesToRemove(String[] move){
@@ -122,5 +149,9 @@ public class GameMaster {
                     result[i] = new HumanPlayer(playerNames.get(i));
         }
         return result;
+    }
+
+    public boolean isGamOver() {
+        return gamOver;
     }
 }
