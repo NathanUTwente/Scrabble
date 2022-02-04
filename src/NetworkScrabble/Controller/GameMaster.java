@@ -37,7 +37,6 @@ public class GameMaster {
         for (Player player : players){
             player.giveTiles(game.getTileBag().getTilesForPlayer(player));
         }
-        runGame();
     }
 
     public void runGame(){
@@ -112,6 +111,20 @@ public class GameMaster {
         for (Player player : game.getPlayers()){
             if (!tui.wantToPlayAgain(player)){
                 result = false;
+            }
+        }
+        return result;
+    }
+
+    public Player[] makePlayers(ArrayList<String> playerNames){
+        Player[] result = new Player[playerNames.size()];
+
+        for (int i = 0; i < playerNames.size(); i++){
+            for (Player player : game.getPlayers()){
+                if (player.getName().equals(playerNames.get(i))){
+                    result[i] = player;
+                    break;
+                }
             }
         }
         return result;

@@ -1,51 +1,124 @@
 package NetworkScrabble.Network;
 
+import NetworkScrabble.Controller.GameMaster;
+import NetworkScrabble.Model.BoardModel.Tile;
+import NetworkScrabble.Model.PlayerModels.Player;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
 
 public class ScrabbleServer {
 
     static final int DEFAULT_PORT = 8028;
 
     ServerSocket listener;
-    ArrayList<ScrabbleHandler> scrabbleHandlers = new ArrayList<>();
+    ArrayList<ScrabbleClientHandler> clients = new ArrayList<>();
     Socket connection;
+    CountDownLatch countDownLatch;
+    GameMaster gameMaster;
+    HashMap<String, ScrabbleClientHandler> nameHandlers = new HashMap<>();
+    HashMap<String, Player> namePlayers = new HashMap<>();
 
     public static void main(String[] args) {
         ScrabbleServer scrabbleServer = new ScrabbleServer();
-        scrabbleServer.startScrabbleServer();
+        scrabbleServer.setUpServer();
+    }
+
+
+    public void setUpServer(){
+        startScrabbleServer();
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("All clients connected, waiting for ready");
+        clientsReady();
+        Player[] players;
+        for (ScrabbleClientHandler client : clients){
+            System.out.println(client.getClientName());
+            nameHandlers.put(client.getClientName(), client);
+        }
+
+    }
+
+    public void setUpGame(){
+        sendPlayerList();
+        System.out.println("Sent Out Names");
+        gameMaster = new GameMaster();
+        Player[] players = gameMaster.makePlayers((ArrayList<String>) nameHandlers.keySet());
+        gameMaster.setUpGame(players);
+        for (Player player : players){
+            namePlayers.put(player.getName(), player);
+        }
+        for (ScrabbleClientHandler handler : clients){
+            Tile[] tiles = namePlayers.get(handler.getClientName()).getTileDeck();
+            String[] tileStrings = new String[tiles.length];
+            for (int i = 0; i < tiles.length; i++){
+                tileStrings[i] = tiles[i].getTileLetter();
+            }
+            handler.sendTiles(tileStrings);
+        }
+
+
     }
 
 
     public void startScrabbleServer(){
+        int count = 0;
         try {
-            int count = 0;
+            listener = new ServerSocket(DEFAULT_PORT);
+            System.out.println("Listening on port " + listener.getLocalPort());
             while (count < 2) {
-                listener = new ServerSocket(DEFAULT_PORT);
-                System.out.println("Listening on port " + listener.getLocalPort());
                 connection = listener.accept();
-                scrabbleHandlers.add(new ScrabbleHandler(connection));
-                listener.close();
+                clients.add(new ScrabbleClientHandler(connection));
                 count++;
             }
+            listener.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        int count2 = 0;
+        countDownLatch = new CountDownLatch(count);
+        for (ScrabbleClientHandler scrabbleHandler : clients) {
+            Thread thread = new Thread(scrabbleHandler, "Thread " + count2);
+            scrabbleHandler.setCountDownLatch(countDownLatch);
+            thread.start();
+        }
 
-        try {
-            for (ScrabbleHandler scrabbleHandler : scrabbleHandlers) {
-                scrabbleHandler.doHandShake();
-                System.out.println("Handshake done successfully,  ready for more shit");
+    }
+
+    public boolean clientsReady(){
+        boolean result = true;
+        int count = 0;
+        for (ScrabbleClientHandler client : clients){
+            try {
+                boolean response = client.getClientReady();
+                if (!response){
+                    result = false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        return result;
+    }
 
+    public void sendPlayerList(){
+        String[] playerList = new String[clients.size()];
+        for (int i = 0; i < clients.size(); i++) {
+            playerList[i] = clients.get(i).getClientName();
+        }
+        for (ScrabbleClientHandler clientHandler : clients){
+            clientHandler.sendPlayerList(playerList);
+        }
     }
 
 
