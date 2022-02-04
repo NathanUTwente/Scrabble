@@ -121,7 +121,11 @@ public class ScrabbleClient {
                         gameSlave.otherTurnDone(confirmedMove[1].split(" "), (int) Integer.parseInt(confirmedMove[2]), confirmedMove[0]);
                     }
                 } catch (InvalidNetworkMoveException e) {
-                    System.out.println(e.getMessage());
+                    if (turn.equals(name)) {
+                        System.out.println(e.getMessage());
+                    } else {
+                        System.out.println("Player " + turn + " was skipped as they played an invalid word");
+                    }
                 }
 
             } catch (IOException e) {

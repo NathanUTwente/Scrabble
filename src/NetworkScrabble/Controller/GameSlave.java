@@ -18,6 +18,7 @@ public class GameSlave {
     private TextBoardRepresentation tui;
     private MoveChecker moveChecker;
     private Player myPlayer;
+    private final static String SKIP = "SKIP";
 
     public GameSlave() {
         tui = new TextBoardRepresentation();
@@ -48,7 +49,19 @@ public class GameSlave {
         tui.updatePlayerDeck(myPlayer);
         String[] move = null;
         move = myPlayer.determineMove(game.getBoard(), tui);
-        return move;
+        if (!move[0].equals(SKIP)){
+            return move;
+        } else {
+            move = moveSkipped();
+            System.out.println("HERE");
+        }
+        return null;
+    }
+
+    public String[] moveSkipped(){
+
+
+        return null;
     }
 
     public void myMoveConfirmed(int points, String[] move){

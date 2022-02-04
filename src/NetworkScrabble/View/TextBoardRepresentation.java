@@ -271,15 +271,17 @@ public class TextBoardRepresentation {
         }
 
         public String swapTiles(Player player){
-            System.out.println("Which tiles would you like to replace, you must replace at least one\nPlease type just the letters you wish to swap with no spacing\nE.g \"abc\"");
+            System.out.println("Which tiles would you like to replace, if any\nPlease type just the letters you wish to swap with no spacing\nE.g \"abc\"\nIf you do not wish to replace tiles please type \"skip\" again");
             Scanner scanner = new Scanner(in);
             while (scanner.hasNextLine()){
                 String toSwap = scanner.nextLine().toUpperCase(Locale.ROOT);
                 try {
                     if (!(toSwap.length() > 0)){
-                        throw new InvalidAnswerException("Invalid response, which tile(s) would you like to swap");
+                        throw new InvalidAnswerException("Invalid response, type \"skip\" or whichever tile(s) would you like to swap");
                     } else {
-                        if (playerHasLetters(player, new String[]{"", "", toSwap})){
+                        if (toSwap.equals("SKIP")){
+                            return "";
+                        }else if (playerHasLetters(player, new String[]{"", "", toSwap})){
                             return toSwap;
                         } else {
                             throw new InvalidAnswerException("You do not have all letters selected, please enter your choice again");

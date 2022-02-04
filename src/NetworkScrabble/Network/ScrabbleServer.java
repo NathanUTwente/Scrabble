@@ -70,12 +70,14 @@ public class ScrabbleServer {
                 //player swapped
             }
         } catch (InvalidMoveException e) {
-            sendInvalidWord(currentPlayer);
+            sendInvalidWord();
         }
     }
 
-    public void sendInvalidWord(Player player){
-        nameHandlers.get(player.getName()).sendInvalidMove();
+    public void sendInvalidWord(){
+        for (ScrabbleClientHandler clientHandler : clients){
+            clientHandler.sendInvalidMove();
+        }
     }
 
     public void sendEndOfTurn(String[] move, int earnedPoints, Player currentPlayer){
