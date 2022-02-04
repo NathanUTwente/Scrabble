@@ -54,7 +54,7 @@ public class ScrabbleServerHandler implements Runnable{
     public void waitForReady() throws IOException {
             String messageIn = in.readLine();
             if (messageIn.equals(ProtocolMessages.SERVERREADY)) {
-                System.out.println("You ready for a game?");
+                System.out.println("Are you ready for a game?\nType \'Y\' when ready");
                 Scanner scanner = new Scanner(System.in);
                 while (scanner.hasNextLine()) {
                     if (scanner.nextLine().equals("Y")) {
@@ -67,18 +67,10 @@ public class ScrabbleServerHandler implements Runnable{
             }
     }
 
-//    public void waitForGame() throws IOException {
-//        String messageIn = in.readLine();
-//        if (){
-//
-//        }
-//    }
-
     public String[] waitForTiles() throws IOException {
         String[] tiles;
         String messageIn = in.readLine();
         String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
-        System.out.println(messageIn);
         if (messageSplit[0].equals(ProtocolMessages.TILES)){
             tiles = messageSplit[1].split(" ");
             return tiles;
@@ -123,7 +115,6 @@ public class ScrabbleServerHandler implements Runnable{
 
     public String[] waitForMoveConfirmation() throws IOException, InvalidNetworkMoveException {
         String messageIn = in.readLine();
-        System.out.println(messageIn);
         String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
         if (messageSplit[0].equals(ProtocolMessages.MOVE)){
             String[] move = new String[3];

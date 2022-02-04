@@ -61,16 +61,13 @@ public class ScrabbleClient {
     public void getPlayerNames(){
         try {
             this.playerNames = serverHandler.getPlayers();
-            for (String name : playerNames){
-                System.out.println(name);
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void getName(){
-        System.out.println("Please enter your name");
+        System.out.println("Please enter your name\nPlease do this after the server is running and the desired players number is selected");
         Scanner scanner = new Scanner(in);
             this.name =  scanner.nextLine();
     }
@@ -91,7 +88,7 @@ public class ScrabbleClient {
             ScrabbleServerHandler handler = new ScrabbleServerHandler(connection, this.name);
             serverHandler = handler;
             handler.doHandShake();
-            System.out.println("Connected.  Time for more");
+            System.out.println("Connected.  Please wait to join");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,7 +100,6 @@ public class ScrabbleClient {
             boolean pass = false;
             try {
                 String turn = serverHandler.waitForTurnBroadcast();
-                System.out.println(turn);
                 if (turn.equals(name)) {
                     String[] move = gameSlave.myMove();
                     if (move[0].equals("PASS")) {

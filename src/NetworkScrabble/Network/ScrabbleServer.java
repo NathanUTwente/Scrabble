@@ -64,9 +64,6 @@ public class ScrabbleServer {
         Player currentPlayer = gameMaster.getCurrentPlayer();
         broadcastTurn(currentPlayer);
         String[] move = getCurrentMove(currentPlayer);
-        for (String m : move){
-            System.out.println(m);
-        }
         int processedMove = 0;
         try {
             processedMove = processMove(move);
@@ -145,7 +142,6 @@ public class ScrabbleServer {
         System.out.println("All clients connected, waiting for ready");
         clientsReady();
         for (ScrabbleClientHandler client : clients){
-            System.out.println(client.getClientName());
             nameHandlers.put(client.getClientName(), client);
         }
 
@@ -169,7 +165,6 @@ public class ScrabbleServer {
             }
             handler.sendTiles(tileStrings);
         }
-        System.out.println(nameHandlers.keySet().equals(namePlayers.keySet()));
     }
 
     public void sendNewTiles(Player currentPlayer, String[] move){
