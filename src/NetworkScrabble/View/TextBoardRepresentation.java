@@ -239,11 +239,14 @@ public class TextBoardRepresentation {
             QuickSort.qsort(justScores);
             System.out.println("The current scores are as follows: ");
             int pos = 0;
+            ArrayList<String> used = new ArrayList<>();
             for (int i = justScores.length - 1; i >= 0; i--){
                 for (Player p : scores.keySet()){
-                    if (justScores[i] == scores.get(p)){
+                    if (justScores[i] == scores.get(p) && !(used.contains(p.getName()))){
                         System.out.println(POSITIONS[pos] + " : " + p.getName() + " with " + justScores[i] + " points");
+                        used.add(p.getName());
                         pos++;
+                        break;
                     }
                 }
             }
