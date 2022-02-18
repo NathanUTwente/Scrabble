@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ClientChatHandler implements Runnable, Chat{
 
@@ -14,6 +16,7 @@ public class ClientChatHandler implements Runnable, Chat{
     private Socket connection;      // For communication with the client.
     private BufferedReader in;  // Stream for receiving data from client.
     private PrintWriter out;     // Stream for sending data to client.
+    private String received = null;
 
     public ClientChatHandler(Socket connection){
         this.connection = connection;
@@ -29,18 +32,12 @@ public class ClientChatHandler implements Runnable, Chat{
 
     @Override
     public void sendChat(String message) {
+        String messageOut = ProtocolMessages.CHAT_FLAG + ProtocolMessages.SEPARATOR + message;
+        out.println(messageOut);
+        out.flush();
 
     }
 
-    @Override
-    public void receiveChat() {
-
-    }
-
-    @Override
-    public void setUp(int port) {
-
-    }
 
     @Override
     public void doHandshake() throws IOException {
@@ -57,6 +54,23 @@ public class ClientChatHandler implements Runnable, Chat{
 
     @Override
     public void run() {
+        while (true){
+            try {
+                String messageIn = in.readLine();
+                received = messageIn.split(ProtocolMessages.SEPARATOR)[1];
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
+    }
+
+    public String getReceived() {
+        Lock lock = new ReentrantLock();
+        lock.lock();
+        String result = received;
+        received = null;
+        lock.unlock();
+        return result;
     }
 }

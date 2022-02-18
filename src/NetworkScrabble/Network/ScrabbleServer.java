@@ -45,12 +45,12 @@ public class ScrabbleServer {
     }
 
     public void setUpChat(int port){
-        System.out.println("here");
         for (ScrabbleClientHandler scrabbleClientHandler : clients){
-            System.out.println("port sent");
             scrabbleClientHandler.sendChatInstructions(port);
         }
         chatManager = new ChatManager(port, clients.size());
+        Thread chat = new Thread(chatManager);
+        chat.start();
     }
 
     public ScrabbleServer() {
@@ -106,11 +106,6 @@ public class ScrabbleServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        try {
-//            countDownLatch.await();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         System.out.println("All clients connected, waiting for ready");
         clientsReady();
         for (ScrabbleClientHandler client : clients){
@@ -132,15 +127,6 @@ public class ScrabbleServer {
             }
         }
         return result;
-    }
-
-    public void startScrabbleServer(){
-        int count2 = 0;
-//        countDownLatch = new CountDownLatch(players);
-        for (ScrabbleClientHandler scrabbleHandler : clients) {
-//            scrabbleHandler.setCountDownLatch(countDownLatch);
-        }
-
     }
 
     public void setUpGame(){
@@ -227,23 +213,16 @@ public class ScrabbleServer {
 
     public int processMove(String[] move) throws InvalidNetworkMoveException, TileBagEmptyException {
             if (move[0].equals("PASS")) {
-                //can throw tilebagemptyexception
                 if (move.length == 2) {
                     return gameMaster.swapTiles(move);
                 } else {
                     return 0;
                 }
             } else {
-                //can throw invalidmoveexception
                 gameMaster.isMoveValid(move);
                 return -500;
             }
     }
-
-
-
-
-
 
     public void sendNewTiles(Player currentPlayer, String[] move){
         ArrayList<Tile> tiles = gameMaster.getNewTiles(currentPlayer, move);
@@ -263,12 +242,6 @@ public class ScrabbleServer {
         nameHandlers.get(currentPlayer.getName()).sendTiles(tileStrings);
 
     }
-
-
-
-
-
-
     public void sendPlayerList(){
         String[] playerList = new String[clients.size()];
         for (int i = 0; i < clients.size(); i++) {
@@ -278,6 +251,4 @@ public class ScrabbleServer {
             clientHandler.sendPlayerList(playerList);
         }
     }
-
-
 }

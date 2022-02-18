@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class ChatClient implements  Chat, Runnable{
@@ -15,8 +16,13 @@ public class ChatClient implements  Chat, Runnable{
     private BufferedReader in;  // Stream for receiving data from server.
     private PrintWriter out;     // Stream for sending data to server.
     Scanner userInput;
+    ChatClient listener;
+    private boolean amListener;
+    private String name;
 
-    public ChatClient(Socket connection){
+    public ChatClient(Socket connection, boolean listener, String name){
+        this.name = name;
+        amListener = listener;
         this.connection = connection;
         try {
             this.in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -25,23 +31,20 @@ public class ChatClient implements  Chat, Runnable{
             e.printStackTrace();
         }
         userInput = new Scanner(System.in);
-        System.out.println("here2");
+        if (!amListener) {
+            this.listener = new ChatClient(connection, true, name);
+            Thread listenerThread = new Thread(this.listener);
+            listenerThread.start();
+        }
     }
 
     @Override
     public void sendChat(String message) {
-
+        String messageOut = ProtocolMessages.CHAT_FLAG + ProtocolMessages.SEPARATOR + name + " : " + message;
+        out.println(messageOut);
+        out.flush();
     }
 
-    @Override
-    public void receiveChat() {
-
-    }
-
-    @Override
-    public void setUp(int port) {
-
-    }
 
     @Override
     public void doHandshake() throws IOException {
@@ -59,6 +62,29 @@ public class ChatClient implements  Chat, Runnable{
 
     @Override
     public void run() {
+        while (true){
+            if (!amListener) {
+                if (userInput.hasNextLine()) {
+                    String text = userInput.nextLine();
+                    String[] split = text.split(" ");
+                    if (split[0].toUpperCase(Locale.ROOT).equals("CHAT")){
+                        String message = text.substring(5);
+                        sendChat(message);
+                    }
+
+                }
+            } else {
+                try {
+                    String messageIn = in.readLine();
+                    String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+                    if (messageSplit[0].equals(ProtocolMessages.CHAT_FLAG)){
+                        System.out.println(messageSplit[1]);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
     }
 }

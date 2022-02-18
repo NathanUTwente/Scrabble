@@ -39,8 +39,10 @@ public class ScrabbleClient {
             System.out.println("waiting");
             int port = serverHandler.waitForChat();
             System.out.println(port);
-            chatClient = new ChatClient(new Socket("", port));
+            chatClient = new ChatClient(new Socket("", port), false, name);
             chatClient.doHandshake();
+            Thread chatThread = new Thread(chatClient);
+            chatThread.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,9 +84,9 @@ public class ScrabbleClient {
     }
 
     public void getName(){
-        System.out.println("Please enter your name\nPlease do this after the server is running and the desired players number is selected");
+        System.out.println("Please enter your name");
         Scanner scanner = new Scanner(in);
-            this.name =  scanner.nextLine();
+        this.name =  scanner.nextLine();
     }
 
 

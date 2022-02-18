@@ -46,7 +46,7 @@ public class TextBoardRepresentation {
      * @return the move instructions parsed into a string array
      */
     public String[] getMove(Player player, Board board) {
-        System.out.println(player.getName() + " please enter your move.\nIn the form [Start Column][Start row] [Direction] [Word]\nEg. F6 RIGHT HELLO\n'_' represents a blank tile\nOr type skip to skip your turn and exchange tiles");
+        System.out.println(player.getName() + " please enter your move.\nIn the form [Start Column][Start row] [Direction] [Word]\nEg. F6 RIGHT HELLO\n'_' represents a blank tile\n'.' represents a tile you use in your word that is already on the board\nOr type skip to skip your turn and exchange tiles");
         Scanner scanner = new Scanner(in);
         String[] input;
         String line = "";
@@ -54,6 +54,9 @@ public class TextBoardRepresentation {
             try {
                 line = scanner.nextLine();
                 input = line.toUpperCase(Locale.ROOT).split(" ");
+                if (input[0].toUpperCase(Locale.ROOT).equals("CHAT")){
+                    continue;
+                }
                 if (input.length == 1){
                     if (input[0].equals("SKIP")){
                         return new String[]{"PASS", swapTiles(player)};
