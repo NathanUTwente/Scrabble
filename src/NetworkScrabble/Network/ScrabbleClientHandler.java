@@ -17,6 +17,7 @@ public class ScrabbleClientHandler implements Runnable{
     private PrintWriter out;     // Stream for sending data to client.
     private CountDownLatch countDownLatch;
     private String clientName;
+    private boolean wake;
 
     Scanner userInput;
 
@@ -46,12 +47,26 @@ public class ScrabbleClientHandler implements Runnable{
 
     @Override
     public void run() {
-        try {
-            this.doHandShake();
-            countDownLatch.countDown();
-        } catch (IOException e) {
-            e.printStackTrace();
+        synchronized (this) {
+            wake = false;
+            try {
+                this.doHandShake();
+                wake = true;
+                this.notifyAll();
+
+//            countDownLatch.countDown();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    public boolean allPlayersConnected(String nameList) throws IOException {
+        out.println(ProtocolMessages.SERVERREADY + ProtocolMessages.SEPARATOR + nameList);
+        out.flush();
+        String messageIn;
+        messageIn = in.readLine();
+        return messageIn.equals(ProtocolMessages.CLIENTREADY);
     }
 
     public boolean getClientReady() throws IOException {
@@ -61,6 +76,8 @@ public class ScrabbleClientHandler implements Runnable{
         messageIn = in.readLine();
         return messageIn.equals(ProtocolMessages.CLIENTREADY);
     }
+
+
 
     public String getClientName() {
         return clientName;
@@ -134,5 +151,9 @@ public class ScrabbleClientHandler implements Runnable{
         String messageOut = ProtocolMessages.GAMEOVER;
         out.println(messageOut);
         out.flush();
+    }
+
+    public boolean wakeNeeded() {
+        return wake;
     }
 }

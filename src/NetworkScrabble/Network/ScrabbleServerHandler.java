@@ -1,7 +1,6 @@
 package NetworkScrabble.Network;
 
 import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
-import Scrabble.Utils.Exceptions.InvalidMoveException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,15 +44,43 @@ public class ScrabbleServerHandler implements Runnable{
     public void run() {
         try {
             this.doHandShake();
-            waitForReady();
+            waitForLobby();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void waitForReady() throws IOException {
+    public boolean waitForLobby() throws IOException {
             String messageIn = in.readLine();
-            if (messageIn.equals(ProtocolMessages.SERVERREADY)) {
+            String[] splitMessage = messageIn.split(ProtocolMessages.SEPARATOR);
+            if (splitMessage.length > 1 && splitMessage[0].equals(ProtocolMessages.SERVERREADY)){
+                System.out.println("You are currently in the lobby with:");
+                for (String name : splitMessage[1].split(" ")){
+                    System.out.println(name);
+                }
+                System.out.println("Is this all players?\nType \'Y\' for yes and \'N\' for no");
+                Scanner scanner = new Scanner(System.in);
+                while (scanner.hasNextLine()) {
+                    String nextLine = scanner.nextLine();
+                    if (nextLine.equals("Y")) {
+                        out.println(ProtocolMessages.CLIENTREADY);
+                        out.flush();
+                        System.out.println("All Players Sent");
+                        break;
+                    } else if (nextLine.equals("N")){
+                        out.println(ProtocolMessages.ERROR);
+                        out.flush();
+                        System.out.println("Not All Players Sent");
+                        break;
+                    } else {
+                        System.out.println("Invalid response please try again");
+                        break;
+                    }
+                }
+//                scanner.close();
+                return false;
+
+            } else if (messageIn.equals(ProtocolMessages.SERVERREADY)) {
                 System.out.println("Are you ready for a game?\nType \'Y\' when ready");
                 Scanner scanner = new Scanner(System.in);
                 while (scanner.hasNextLine()) {
@@ -64,8 +91,11 @@ public class ScrabbleServerHandler implements Runnable{
                         break;
                     }
                 }
+                return true;
             }
+            return false;
     }
+
 
     public String[] waitForTiles() throws IOException {
         String[] tiles;
@@ -140,4 +170,6 @@ public class ScrabbleServerHandler implements Runnable{
         out.println(messageOut);
         out.flush();
     }
+
+
 }
