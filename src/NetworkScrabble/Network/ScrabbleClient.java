@@ -1,9 +1,6 @@
 package NetworkScrabble.Network;
 
 import NetworkScrabble.Controller.GameSlave;
-import NetworkScrabble.Model.BoardModel.Tile;
-import NetworkScrabble.Model.TileBag;
-import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
 import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
 
 import java.io.IOException;
@@ -28,7 +25,7 @@ public class ScrabbleClient {
         ScrabbleClient client = new ScrabbleClient();
         client.getName();
         client.connectToServer();
-        client.waitForReady();
+        client.waitForLobbyAndReady();
         client.getPlayerNames();
         client.setUpGame();
         client.play();
@@ -44,11 +41,14 @@ public class ScrabbleClient {
     }
 
 
-    public void waitForReady(){
-        try {
-            serverHandler.waitForReady();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void waitForLobbyAndReady(){
+        boolean ready = false;
+        while (!ready) {
+            try {
+                ready = serverHandler.waitForLobby();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

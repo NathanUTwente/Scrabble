@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 import static java.lang.System.in;
-//A second client to play with, identical to other one
+
 public class ScrabbleClient2 {
 
     static final int DEFAULT_PORT = 8028;
@@ -25,7 +25,7 @@ public class ScrabbleClient2 {
         ScrabbleClient2 client = new ScrabbleClient2();
         client.getName();
         client.connectToServer();
-        client.waitForReady();
+        client.waitForLobbyAndReady();
         client.getPlayerNames();
         client.setUpGame();
         client.play();
@@ -41,11 +41,14 @@ public class ScrabbleClient2 {
     }
 
 
-    public void waitForReady(){
-        try {
-            serverHandler.waitForReady();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void waitForLobbyAndReady(){
+        boolean ready = false;
+        while (!ready) {
+            try {
+                ready = serverHandler.waitForLobby();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
