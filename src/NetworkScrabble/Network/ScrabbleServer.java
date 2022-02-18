@@ -53,6 +53,80 @@ public class ScrabbleServer {
         broadcastGameOver();
 
     }
+    public void setUpServer(){
+        startScrabbleServer(players);
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("All clients connected, waiting for ready");
+        clientsReady();
+        for (ScrabbleClientHandler client : clients){
+            nameHandlers.put(client.getClientName(), client);
+        }
+
+    }
+    public boolean clientsReady(){
+        boolean result = true;
+        for (ScrabbleClientHandler client : clients){
+            try {
+                boolean response = client.getClientReady();
+                if (!response){
+                    result = false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    public void startScrabbleServer(int players){
+        int count = 0;
+        try {
+            listener = new ServerSocket(DEFAULT_PORT);
+            System.out.println("Listening on port " + listener.getLocalPort());
+            while (count < players) {
+                connection = listener.accept();
+                clients.add(new ScrabbleClientHandler(connection));
+                count++;
+            }
+            listener.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int count2 = 0;
+        countDownLatch = new CountDownLatch(players);
+        for (ScrabbleClientHandler scrabbleHandler : clients) {
+            Thread thread = new Thread(scrabbleHandler, "Thread " + count2);
+            scrabbleHandler.setCountDownLatch(countDownLatch);
+            thread.start();
+        }
+
+    }
+
+    public void setUpGame(){
+        sendPlayerList();
+        System.out.println("Sent Out Names");
+        gameMaster = new GameMaster();
+        ArrayList<String> names = new ArrayList<>(nameHandlers.keySet());
+        Player[] players = gameMaster.makePlayers(names);
+        gameMaster.setUpGame(players);
+        for (Player player : players){
+            namePlayers.put(player.getName(), player);
+        }
+        for (ScrabbleClientHandler handler : clients){
+            Tile[] tiles = namePlayers.get(handler.getClientName()).getTileDeck();
+            String[] tileStrings = new String[tiles.length];
+            for (int i = 0; i < tiles.length; i++){
+                tileStrings[i] = tiles[i].getTileLetter();
+            }
+            handler.sendTiles(tileStrings);
+        }
+    }
 
     public void broadcastGameOver(){
         for (ScrabbleClientHandler clientHandler : clients){
@@ -132,40 +206,9 @@ public class ScrabbleServer {
     }
 
 
-    public void setUpServer(){
-        startScrabbleServer(players);
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("All clients connected, waiting for ready");
-        clientsReady();
-        for (ScrabbleClientHandler client : clients){
-            nameHandlers.put(client.getClientName(), client);
-        }
 
-    }
 
-    public void setUpGame(){
-        sendPlayerList();
-        System.out.println("Sent Out Names");
-        gameMaster = new GameMaster();
-        ArrayList<String> names = new ArrayList<>(nameHandlers.keySet());
-        Player[] players = gameMaster.makePlayers(names);
-        gameMaster.setUpGame(players);
-        for (Player player : players){
-            namePlayers.put(player.getName(), player);
-        }
-        for (ScrabbleClientHandler handler : clients){
-            Tile[] tiles = namePlayers.get(handler.getClientName()).getTileDeck();
-            String[] tileStrings = new String[tiles.length];
-            for (int i = 0; i < tiles.length; i++){
-                tileStrings[i] = tiles[i].getTileLetter();
-            }
-            handler.sendTiles(tileStrings);
-        }
-    }
+
 
     public void sendNewTiles(Player currentPlayer, String[] move){
         ArrayList<Tile> tiles = gameMaster.getNewTiles(currentPlayer, move);
@@ -187,47 +230,9 @@ public class ScrabbleServer {
     }
 
 
-    public void startScrabbleServer(int players){
-        int count = 0;
-        try {
-            listener = new ServerSocket(DEFAULT_PORT);
-            System.out.println("Listening on port " + listener.getLocalPort());
-            while (count < players) {
-                connection = listener.accept();
-                clients.add(new ScrabbleClientHandler(connection));
-                count++;
-            }
-            listener.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        int count2 = 0;
-        countDownLatch = new CountDownLatch(players);
-        for (ScrabbleClientHandler scrabbleHandler : clients) {
-            Thread thread = new Thread(scrabbleHandler, "Thread " + count2);
-            scrabbleHandler.setCountDownLatch(countDownLatch);
-            thread.start();
-        }
 
-    }
-
-    public boolean clientsReady(){
-        boolean result = true;
-        int count = 0;
-        for (ScrabbleClientHandler client : clients){
-            try {
-                boolean response = client.getClientReady();
-                if (!response){
-                    result = false;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
 
     public void sendPlayerList(){
         String[] playerList = new String[clients.size()];
