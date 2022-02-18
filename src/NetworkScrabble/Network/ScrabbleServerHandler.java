@@ -171,5 +171,15 @@ public class ScrabbleServerHandler implements Runnable{
         out.flush();
     }
 
+    public int waitForChat() throws IOException {
+        String messageIn = in.readLine();
+        String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
+        if (messageSplit[0].equals(ProtocolMessages.CHAT_FLAG)){
+            return Integer.parseInt(messageSplit[1]);
+        }
+        return 0;
+    }
+
+
 
 }

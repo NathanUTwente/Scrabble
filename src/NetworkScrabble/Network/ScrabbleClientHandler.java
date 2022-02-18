@@ -156,4 +156,10 @@ public class ScrabbleClientHandler implements Runnable{
     public boolean wakeNeeded() {
         return wake;
     }
+
+    public void sendChatInstructions(int port){
+        String messageOut = ProtocolMessages.CHAT_FLAG + ProtocolMessages.SEPARATOR + port;
+        out.println(messageOut);
+        out.flush();
+    }
 }

@@ -3,6 +3,7 @@ package NetworkScrabble.Network;
 import NetworkScrabble.Controller.GameMaster;
 import NetworkScrabble.Model.BoardModel.Tile;
 import NetworkScrabble.Model.PlayerModels.Player;
+import NetworkScrabble.Network.ChatPackage.ChatManager;
 import NetworkScrabble.Utils.Exceptions.InvalidMoveException;
 import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
 import NetworkScrabble.Utils.Exceptions.TileBagEmptyException;
@@ -12,15 +13,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.Lock;
-
-import static java.lang.System.in;
 
 public class ScrabbleServer {
 
     static final int DEFAULT_PORT = 8028;
+    static final int DEFAULT_CHAT_PORT = 8029;
 
     ServerSocket listener;
     ArrayList<ScrabbleClientHandler> clients = new ArrayList<>();
@@ -31,6 +29,7 @@ public class ScrabbleServer {
     HashMap<String, Player> namePlayers = new HashMap<>();
 //    int players;
     LobbyHandler lobbyHandler;
+    ChatManager chatManager;
 
 
     public static void main(String[] args) {
@@ -40,8 +39,18 @@ public class ScrabbleServer {
 //        scanner.close();
         ScrabbleServer scrabbleServer = new ScrabbleServer();
         scrabbleServer.setUpServer();
+        scrabbleServer.setUpChat(DEFAULT_CHAT_PORT);
         scrabbleServer.setUpGame();
         scrabbleServer.runGame();
+    }
+
+    public void setUpChat(int port){
+        System.out.println("here");
+        for (ScrabbleClientHandler scrabbleClientHandler : clients){
+            System.out.println("port sent");
+            scrabbleClientHandler.sendChatInstructions(port);
+        }
+        chatManager = new ChatManager(port, clients.size());
     }
 
     public ScrabbleServer() {
@@ -58,7 +67,6 @@ public class ScrabbleServer {
 
     }
     public void setUpServer() {
-//        startScrabbleServer();
         boolean ready = false;
         try {
             listener = new ServerSocket(DEFAULT_PORT);
@@ -104,7 +112,7 @@ public class ScrabbleServer {
 //            e.printStackTrace();
 //        }
         System.out.println("All clients connected, waiting for ready");
-        System.out.println(clientsReady());
+        clientsReady();
         for (ScrabbleClientHandler client : clients){
             nameHandlers.put(client.getClientName(), client);
         }

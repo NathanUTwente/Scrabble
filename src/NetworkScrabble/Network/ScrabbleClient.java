@@ -1,6 +1,7 @@
 package NetworkScrabble.Network;
 
 import NetworkScrabble.Controller.GameSlave;
+import NetworkScrabble.Network.ChatPackage.ChatClient;
 import NetworkScrabble.Utils.Exceptions.InvalidNetworkMoveException;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class ScrabbleClient {
     Socket connection;
     GameSlave gameSlave;
     boolean gameOver = false;
+    private ChatClient chatClient;
 
 
     public static void main(String[] args) {
@@ -26,9 +28,22 @@ public class ScrabbleClient {
         client.getName();
         client.connectToServer();
         client.waitForLobbyAndReady();
+        client.setUpChat();
         client.getPlayerNames();
         client.setUpGame();
         client.play();
+    }
+
+    public void setUpChat() {
+        try {
+            System.out.println("waiting");
+            int port = serverHandler.waitForChat();
+            System.out.println(port);
+            chatClient = new ChatClient(new Socket("", port));
+            chatClient.doHandshake();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void waitForTiles(){
