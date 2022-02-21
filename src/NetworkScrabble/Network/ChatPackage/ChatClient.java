@@ -22,6 +22,13 @@ public class ChatClient implements  Chat, Runnable{
     private boolean amListener;
     private String name;
 
+    /**
+     * Creates object and decides whether it will listen for user input or server messages, creates a thread to run on
+     * @ensures name != null && amListener != null && connection != null && out != null && in != null & userInput != null
+     * @param connection
+     * @param listener
+     * @param name
+     */
     public ChatClient(Socket connection, boolean listener, String name){
         this.name = name;
         amListener = listener;
@@ -40,6 +47,11 @@ public class ChatClient implements  Chat, Runnable{
         }
     }
 
+    /**
+     * Sends a given message to the server
+     * @requires out != null
+     * @param message message to be sent
+     */
     @Override
     public void sendChat(String message) {
         String messageOut = ProtocolMessages.CHAT_FLAG + ProtocolMessages.SEPARATOR + name + " : " + message;
@@ -49,6 +61,10 @@ public class ChatClient implements  Chat, Runnable{
     }
 
 
+    /**
+     * Sends out a hello messaage to the server and waits for a set response, prints (in)valid connection
+     * @throws IOException
+     */
     @Override
     public void doHandshake() throws IOException {
         out.println(ProtocolMessages.HELLO);
@@ -63,6 +79,11 @@ public class ChatClient implements  Chat, Runnable{
 
     }
 
+    /**
+     * While running either listens for user input and sends it or listens for server messages and prints them
+     * Depends on whether listener or not
+     * @requires amListener != null && userInput != null && in != null
+     */
     @Override
     public void run() {
         while (true){
