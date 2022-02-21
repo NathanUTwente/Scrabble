@@ -22,7 +22,10 @@ public class ScrabbleClient {
     boolean gameOver = false;
     private ChatClient chatClient;
 
-
+    /**
+     * Starts the client.
+     * Gets clients name, connects to server, lobby and game, and then controls client playing game
+     */
     public static void main(String[] args) {
         ScrabbleClient client = new ScrabbleClient();
         client.getName();
@@ -34,6 +37,10 @@ public class ScrabbleClient {
         client.play();
     }
 
+    /**
+     * Sets up the chat for the client
+     * @ensures client is connected to chat
+     */
     public void setUpChat() {
         try {
             System.out.println("waiting");
@@ -48,6 +55,10 @@ public class ScrabbleClient {
         }
     }
 
+    /**
+     * Instructs the handler to wait for tiles and gives tiles to the GameSlave to give the player
+     * @requires serverHandler != null && gameSlave != null
+     */
     public void waitForTiles(){
         try {
             String[] tiles = serverHandler.waitForTiles();
@@ -58,6 +69,10 @@ public class ScrabbleClient {
     }
 
 
+    /**
+     * Instructs the handler to wait for lobby
+     * @requires serverHandler != null
+     */
     public void waitForLobbyAndReady(){
         boolean ready = false;
         while (!ready) {
@@ -69,12 +84,19 @@ public class ScrabbleClient {
         }
     }
 
+    /**
+     * Creates the game on the client side, and then waits to receive starting tiles
+     */
     public void setUpGame(){
         gameSlave = new GameSlave();
         gameSlave.setupGame(playerNames, name);
         waitForTiles();
     }
 
+    /**
+     * Instructs the handler to get the names of all players in game
+     * @requires serverHandler != null
+     */
     public void getPlayerNames(){
         try {
             this.playerNames = serverHandler.getPlayers();
@@ -83,6 +105,10 @@ public class ScrabbleClient {
         }
     }
 
+    /**
+     * Gets the users name
+     * @ensures name != null
+     */
     public void getName(){
         System.out.println("Please enter your name");
         Scanner scanner = new Scanner(in);
@@ -90,7 +116,10 @@ public class ScrabbleClient {
     }
 
 
-
+    /**
+     * Sets up connection to server and does handshake
+     * @ensures serverHandler != null
+     */
     public void connectToServer(){
 
         try {
@@ -112,6 +141,10 @@ public class ScrabbleClient {
 
     }
 
+    /**
+     * Plays the game for the client, asks handler wait turn it is and tells the handler to tell the server its moves
+     * @requires serverHandler != null && gameSlave != null
+     */
     public void play(){
         while (!gameOver) {
             boolean pass = false;
@@ -166,6 +199,12 @@ public class ScrabbleClient {
         }
     }
 
+    /**
+     * Waits for a move confirmation from server, this player's or another's
+     * @return move that is confirmed
+     * @throws IOException
+     * @throws InvalidNetworkMoveException
+     */
     public String[] waitForMoveConfirmation() throws IOException, InvalidNetworkMoveException {
         return serverHandler.waitForMoveConfirmation();
     }
