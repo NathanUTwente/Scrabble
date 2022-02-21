@@ -9,14 +9,16 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ChatClient implements  Chat, Runnable{
 
     private Socket connection;      // For communication with the server.
     private BufferedReader in;  // Stream for receiving data from server.
     private PrintWriter out;     // Stream for sending data to server.
-    Scanner userInput;
-    ChatClient listener;
+    final Scanner userInput;
+    private ChatClient listener;
     private boolean amListener;
     private String name;
 
@@ -43,6 +45,7 @@ public class ChatClient implements  Chat, Runnable{
         String messageOut = ProtocolMessages.CHAT_FLAG + ProtocolMessages.SEPARATOR + name + " : " + message;
         out.println(messageOut);
         out.flush();
+        System.out.print("\b" + " - message sent");
     }
 
 
@@ -64,23 +67,25 @@ public class ChatClient implements  Chat, Runnable{
     public void run() {
         while (true){
             if (!amListener) {
-                if (userInput.hasNextLine()) {
-                    String text = userInput.nextLine();
-                    String[] split = text.split(" ");
-                    if (split[0].toUpperCase(Locale.ROOT).equals("CHAT")){
-                        String message = text.substring(5);
-                        sendChat(message);
-                    }
-
-                }
+//                synchronized (userInput){
+//                if (userInput.hasNextLine()) {
+//                    String text = userInput.nextLine();
+//                    String[] split = text.split(" ");
+//                    if (split[0].toUpperCase(Locale.ROOT).equals("CHAT")) {
+//                        String message = text.substring(5);
+//                        sendChat(message);
+//                    }
+//
+//                }
+//            }
             } else {
                 try {
-                    String messageIn = in.readLine();
+                        String messageIn = in.readLine();
                     String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
-                    if (messageSplit[0].equals(ProtocolMessages.CHAT_FLAG)){
+                    if (messageSplit[0].equals(ProtocolMessages.CHAT_FLAG)) {
                         System.out.println(messageSplit[1]);
                     }
-                } catch (IOException e) {
+            }catch (IOException e) {
                     e.printStackTrace();
                 }
             }

@@ -93,7 +93,6 @@ public class GameMaster {
     }
 
     public String giveMeATile(){
-        String tile;
         return game.getTileBag().getTileOutOfBag().getTileLetter();
     }
 

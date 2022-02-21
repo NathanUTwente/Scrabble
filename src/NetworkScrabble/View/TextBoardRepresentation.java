@@ -13,6 +13,8 @@ import NetworkScrabble.Utils.Exceptions.WrongFormatException;
 import NetworkScrabble.Utils.QuickSort;
 
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.System.in;
 
@@ -46,39 +48,44 @@ public class TextBoardRepresentation {
      * @return the move instructions parsed into a string array
      */
     public String[] getMove(Player player, Board board) {
-        System.out.println(player.getName() + " please enter your move.\nIn the form [Start Column][Start row] [Direction] [Word]\nEg. F6 RIGHT HELLO\n'_' represents a blank tile\n'.' represents a tile you use in your word that is already on the board\nOr type skip to skip your turn and exchange tiles");
-        Scanner scanner = new Scanner(in);
-        String[] input;
-        String line = "";
-        while (scanner.hasNextLine()) {
-            try {
-                line = scanner.nextLine();
-                input = line.toUpperCase(Locale.ROOT).split(" ");
-                if (input[0].toUpperCase(Locale.ROOT).equals("CHAT")){
-                    continue;
-                }
-                if (input.length == 1){
-                    if (input[0].equals("SKIP")){
-                        return new String[]{"PASS", swapTiles(player)};
-                    } else {
-                        throw new InvalidAnswerException("If you wish to skip your turn and replace tile(s) please type \"skip\" (Upper or lowercase is irrelevant)\nYou will be asked which tiles to swap next after");
+        System.out.println(player.getName() + " please enter your move.\nIn the form [Start Column][Start row] [Direction] [Word]\nEg. F6 RIGHT HELLO\n'_' represents a blank tile\n'.' represents a tile you use in your word that is already on the board\nOr type skip to skip your turn and exchange tiles\nIf your move doesn't work the first time please retype it\nPlease dont send chats during your turn, it is possible but may cause input issues");
+//        Lock lock = new ReentrantLock();
+//        lock.lock();
+        synchronized (in) {
+            Scanner scanner = new Scanner(in);
+            String[] input;
+            String line = "";
+            while (scanner.hasNextLine()) {
+                try {
+                    line = scanner.nextLine();
+//                lock.unlock();
+                    input = line.toUpperCase(Locale.ROOT).split(" ");
+                    if (input[0].toUpperCase(Locale.ROOT).equals("CHAT")) {
+                        continue;
                     }
-                }
-                if (checkFormat(input)) {
-                    if (playerHasLetters(player, input)) {
-                        if (input[2].contains("_")) {
-                            String[] blankReplace = getBlank(input[2]);
-                            input = replaceUnderscores(input, blankReplace);
+                    if (input.length == 1) {
+                        if (input[0].equals("SKIP")) {
+                            return new String[]{"PASS", swapTiles(player)};
+                        } else {
+                            throw new InvalidAnswerException("If you wish to skip your turn and replace tile(s) please type \"skip\" (Upper or lowercase is irrelevant)\nYou will be asked which tiles to swap next after");
                         }
-                        return input;
-                    } else {
-                        throw new TileNotInDeckException("You do not have the required tiles for this move, please try again");
                     }
-                } else {
-                    throw new WrongFormatException("Wrong format, please retype your move");
+                    if (checkFormat(input)) {
+                        if (playerHasLetters(player, input)) {
+                            if (input[2].contains("_")) {
+                                String[] blankReplace = getBlank(input[2]);
+                                input = replaceUnderscores(input, blankReplace);
+                            }
+                            return input;
+                        } else {
+                            throw new TileNotInDeckException("You do not have the required tiles for this move, please try again");
+                        }
+                    } else {
+                        throw new WrongFormatException("Wrong format, please retype your move");
+                    }
+                } catch (InvalidMoveException | InvalidAnswerException e) {
+                    System.out.println(e.getMessage());
                 }
-            } catch (InvalidMoveException | InvalidAnswerException e){
-                System.out.println(e.getMessage());
             }
         }
         return null;
@@ -276,18 +283,19 @@ public class TextBoardRepresentation {
             return false;
         }
 
-        public String swapTiles(Player player){
+        public String swapTiles(Player player) {
             System.out.println("Which tiles would you like to replace, if any\nPlease type just the letters you wish to swap with no spacing\nE.g \"abc\"\nIf you do not wish to replace tiles please type \"skip\" again");
+            synchronized (in){
             Scanner scanner = new Scanner(in);
-            while (scanner.hasNextLine()){
+            while (scanner.hasNextLine()) {
                 String toSwap = scanner.nextLine().toUpperCase(Locale.ROOT);
                 try {
-                    if (!(toSwap.length() > 0)){
+                    if (!(toSwap.length() > 0)) {
                         throw new InvalidAnswerException("Invalid response, type \"skip\" or whichever tile(s) would you like to swap");
                     } else {
-                        if (toSwap.equals("SKIP")){
+                        if (toSwap.equals("SKIP")) {
                             return "";
-                        }else if (playerHasLetters(player, new String[]{"", "", toSwap})){
+                        } else if (playerHasLetters(player, new String[]{"", "", toSwap})) {
                             return toSwap;
                         } else {
                             throw new InvalidAnswerException("You do not have all letters selected, please enter your choice again");
@@ -297,6 +305,7 @@ public class TextBoardRepresentation {
                     System.out.println(e.getMessage());
                 }
             }
+        }
             return null;
         }
 }
