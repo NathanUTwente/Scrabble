@@ -12,8 +12,6 @@ import Scrabble.Utils.MoveChecker;
 import java.util.ArrayList;
 
 public class GameMaster {
-
-
     private Game game;
     private TextBoardRepresentation tui;
     private MoveChecker moveChecker;
@@ -28,11 +26,18 @@ public class GameMaster {
         this.moveChecker = new MoveChecker();
     }
 
+    /**
+     * Default game set up, for testing
+     */
     public void setUpGame(){
         Player[] players = new Player[]{new HumanPlayer("Nathan"), new HumanPlayer("Lejla")};
         setUpGame(players);
     }
 
+    /**
+     * Setus up game with the given players and gives the players tiles
+     * @param players array of players to set up game with
+     */
     public void setUpGame(Player[] players){
         game = new Game(players);
         for (Player player : players){
@@ -41,6 +46,9 @@ public class GameMaster {
         runGame();
     }
 
+    /**
+     * makes sure the game works smootly by updating the player deck checking the move and etc.
+     */
     public void runGame(){
         while (!game.gameOver()){
             Player currentPlayer = game.getNextPlayer();
@@ -89,12 +97,21 @@ public class GameMaster {
         }
     }
 
+    /**
+     * when player want to swap current tiles for new once this method is used
+     * @param player
+     * @param tilesToSwap
+     */
     public void swapTiles(Player player, String tilesToSwap){
         String[] tilesToRemove = getTilesToRemove(new String[]{"", "", tilesToSwap});
         player.removeTiles(tilesToRemove);
     }
 
-
+    /**
+     * gets the tiles that need to be removed
+     * @param move
+     * @return
+     */
     public String[] getTilesToRemove(String[] move){
         String[] toRemoveFromPlayer = new String[move[2].length()];
         for (String l : move[2].split("")){
@@ -108,6 +125,11 @@ public class GameMaster {
         return toRemoveFromPlayer;
     }
 
+    /**
+     * when game is done this method is used to see if the players want to play again
+     * @param game
+     * @return true if players want to play again or false if they do not
+     */
     public boolean playAgain(Game game){
         boolean result = true;
         for (Player player : game.getPlayers()){

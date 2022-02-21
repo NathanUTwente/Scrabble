@@ -12,20 +12,31 @@ public class Tile {
     private int points;
 
 
-
     public Tile(TileType tileType, int points) {
         this.tileType = tileType;
         this.points = points;
     }
 
+    /**
+     * returns the tile type
+     * @return tileType
+     */
     public TileType getTileType() {
         return tileType;
     }
 
+    /**
+     * returns the points of the player
+     * @return points
+     */
     public int getPoints() {
         return points;
     }
-    
+
+    /**
+     * returns the tileType of the string inputed or _ if blank is given
+     * @return tile type or _
+     */
     public String getTileLetter(){
         if (this.tileType == TileType.BLANK){
             return "_";

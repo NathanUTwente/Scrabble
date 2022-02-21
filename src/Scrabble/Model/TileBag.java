@@ -93,10 +93,19 @@ public class TileBag {
         tileBag.add(new Tile(Tile.TileType.Z, 10));
     }
 
+    /**
+     * returns the number of tiles left in the bag
+     * @return tilebag of player
+     */
     public int tilesLeftInBag(){
         return tileBag.size();
     }
 
+    /**
+     * @ensures tiles left is bigger than 0
+     * when player uses tiles this method removes the played tiles from the tilebag
+     * @return tilebag without the tiles
+     */
     public Tile getTileOutOfBag(){
         if (tilesLeftInBag() > 0) {
             int max = tileBag.size() - 1;
@@ -108,6 +117,11 @@ public class TileBag {
         }
     }
 
+    /**
+     * turns the string given when move is played into a tile
+     * @param letter
+     * @return letter in tile
+     */
     public static Tile.TileType stringToTile(String letter){
         switch (letter){
             case "A":
@@ -170,6 +184,11 @@ public class TileBag {
             return null;
     }
 
+    /**
+     * returns the points of the tile
+     * @param letter
+     * @return points of letter
+     */
     public static int GetPointOfTile(String letter){
         TileBag tileBag = new TileBag();
         for (Tile tile : tileBag.tileList){
@@ -180,6 +199,11 @@ public class TileBag {
         return 0;
     }
 
+    /**
+     * when player makes a move this method checks how many tiles are used and restocks them with new ones
+     * @param player
+     * @return an arraylist of tiles
+     */
     public ArrayList<Tile> getTilesForPlayer(Player player){
         ArrayList<Tile> newTile = new ArrayList<>();
         int needed = player.EmptySpotsInDeck();

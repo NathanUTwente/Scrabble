@@ -20,7 +20,18 @@ public class TextBoardRepresentation {
     private final String[] POSITIONS = new String[]{"1st", "2nd", "3rd", "4th"};
 
     public static void main(String[] args) {
-
+        TextBoardRepresentation tui = new TextBoardRepresentation();
+        HashMap<Player, Integer> scores = new HashMap<>();
+        scores.put(new HumanPlayer("Bob"), 87);
+        scores.put(new HumanPlayer("Rob"), 15);
+        scores.put(new HumanPlayer("Tim"), 112);
+        scores.put(new HumanPlayer("Jim"), 3);
+        tui.displayScores(scores);
+        Player[] players = new Player[]{new HumanPlayer("Lejla"), new HumanPlayer("Nathan")};
+        Game game = new Game(players);
+        game.updatePoints(players[0], 110);
+        game.updatePoints(players[1], 111);
+        tui.displayResults(game);
     }
 
     /**
@@ -111,6 +122,11 @@ public class TextBoardRepresentation {
             }
     }
 
+    /**
+     * This method checks if the format given is in the correct format
+     * @param input
+     * @return if correct returns the results
+     */
     public boolean checkFormat(String[] input) {
         boolean result = true;
         ArrayList<Boolean> tests = new ArrayList<>();
@@ -135,7 +151,12 @@ public class TextBoardRepresentation {
         return result;
     }
 
-
+    /**
+     * checks if the letters the player wants to use are in the tilebag of the player
+     * @param player
+     * @param move
+     * @return
+     */
     public boolean playerHasLetters(Player player, String[] move) {
         Tile[] tileBagClone = player.cloneOfTiledeck();
         HashMap<String, Integer> lettersInputed = new HashMap<>();
@@ -199,6 +220,12 @@ public class TextBoardRepresentation {
             return blanks;
         }
 
+    /**
+     * replaces the underscores for the letter the player wants to use
+     * @param move
+     * @param replacements
+     * @return the move
+     */
         public String[] replaceUnderscores(String[] move, String[] replacements){
             int replacementInd = 0;
             String moveCopy = "";
@@ -214,7 +241,11 @@ public class TextBoardRepresentation {
             return move;
         }
 
-        public void displayScores(Map<Player, Integer> scores){
+    /**
+     * shows the current scores
+     * @param scores
+     */
+    public void displayScores(Map<Player, Integer> scores){
             int[] justScores = new int[scores.values().size()];
             int index = 0;
             for (int i : scores.values()){
@@ -234,7 +265,12 @@ public class TextBoardRepresentation {
             }
         }
 
-        public boolean wantToPlayAgain(Player player){
+    /**
+     * asks the players if they want to play again
+     * @param player
+     * @return false if the player enters something else than Y or N
+     */
+    public boolean wantToPlayAgain(Player player){
             System.out.println(player.getName() + " would you like to play again?\nY for yes, N for no");
             Scanner scanner = new Scanner(in);
             while (scanner.hasNextLine()){

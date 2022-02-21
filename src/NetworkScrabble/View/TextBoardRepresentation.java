@@ -49,8 +49,6 @@ public class TextBoardRepresentation {
      */
     public String[] getMove(Player player, Board board) {
         System.out.println(player.getName() + " please enter your move.\nIn the form [Start Column][Start row] [Direction] [Word]\nEg. F6 RIGHT HELLO\n'_' represents a blank tile\n'.' represents a tile you use in your word that is already on the board\nOr type skip to skip your turn and exchange tiles\nIf your move doesn't work the first time please retype it\nPlease dont send chats during your turn, it is possible but may cause input issues");
-//        Lock lock = new ReentrantLock();
-//        lock.lock();
         synchronized (in) {
             Scanner scanner = new Scanner(in);
             String[] input;
@@ -58,7 +56,6 @@ public class TextBoardRepresentation {
             while (scanner.hasNextLine()) {
                 try {
                     line = scanner.nextLine();
-//                lock.unlock();
                     input = line.toUpperCase(Locale.ROOT).split(" ");
                     if (input[0].toUpperCase(Locale.ROOT).equals("CHAT")) {
                         continue;

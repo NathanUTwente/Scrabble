@@ -27,14 +27,26 @@ public class Game {
         playerTurn = randomOrder;
     }
 
+    /**
+     * gets the board
+     * @return board
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     * returns the players
+     * @return players
+     */
     public Player[] getPlayers() {
         return players;
     }
 
+    /**
+     * gets the next player that has to play
+     * @return Player
+     */
     public Player getNextPlayer(){
         Player nextPlayer = players[playerTurn];
         playerTurn++;
@@ -44,15 +56,28 @@ public class Game {
         return nextPlayer;
     }
 
+    /**
+     * places the move on the board
+     * @param move
+     */
     public void playMove(String[] move){
         Board.placeMove(move, board);
     }
 
+    /**
+     * gets the points from the move the player played and adds them to the total score
+     * @param player
+     * @param points
+     */
     public void updatePoints(Player player, int points){
         scores.put(player, scores.get(player) + points);
 
     }
 
+    /**
+     * gets the scores
+     * @return scores
+     */
     public Map<Player, Integer> getScores() {
         return scores;
     }

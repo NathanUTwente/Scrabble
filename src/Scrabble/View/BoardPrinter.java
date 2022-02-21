@@ -16,6 +16,11 @@ public class BoardPrinter {
         System.out.println(createBoard(board));
     }
 
+    /**
+     * prints the board to the screen
+     * @param board
+     * @return board
+     */
     public static String createBoard(Board board){
         StringBuilder builder = new StringBuilder();
 
