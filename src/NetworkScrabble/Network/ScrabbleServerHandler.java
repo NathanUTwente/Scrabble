@@ -11,15 +11,22 @@ import java.util.Scanner;
 
 public class ScrabbleServerHandler implements Runnable{
 
-    private Socket connection;      // For communication with the client.
-    private BufferedReader in;  // Stream for receiving data from client.
-    private PrintWriter out;     // Stream for sending data to client.
-//    private boolean ready = false;
+    private Socket connection;      // For communication with the server.
+    private BufferedReader in;  // Stream for receiving data from server.
+    private PrintWriter out;     // Stream for sending data to server.
 
     private String name;
 
     Scanner userInput;
 
+    /**
+     * Creates the object and sets needed attributes
+     * @param connection connection to communicate with client over
+     * @param name name of player this client is responsible for
+     * @requires connection != null && name != null
+     * @ensures  this.connection != null && in != null && out != null && userInput != null && this.name != null
+     * @throws IOException
+     */
     public ScrabbleServerHandler(Socket connection, String name) throws IOException {
         this.connection = connection;
         this.in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -28,6 +35,11 @@ public class ScrabbleServerHandler implements Runnable{
         this.name = name;
     }
 
+    /**
+     * Does network handshake, sends hello and players name to the server and waits for server response
+     * Checks that response match preset
+     * @throws IOException if connected to something other than Scrabble Server
+     */
     public void doHandShake() throws IOException {
         out.println(ProtocolMessages.HELLO + ProtocolMessages.SEPARATOR + name);
         out.flush();
@@ -40,6 +52,9 @@ public class ScrabbleServerHandler implements Runnable{
         }
     }
 
+    /**
+     * Does the handshake and then waits to join a lobby
+     */
     @Override
     public void run() {
         try {
@@ -50,6 +65,14 @@ public class ScrabbleServerHandler implements Runnable{
         }
     }
 
+    /**
+     * Waits for server message, checks it equals preset and asks player if the players list from the server is complete
+     * Sends back player response
+     * If server message is a different preset it asks player if they are ready and sends confirmation when they are
+     * @requires in != null && out != null
+     * @return true if in game, false if just in lobby
+     * @throws IOException
+     */
     public boolean waitForLobby() throws IOException {
             String messageIn = in.readLine();
             String[] splitMessage = messageIn.split(ProtocolMessages.SEPARATOR);
@@ -77,7 +100,6 @@ public class ScrabbleServerHandler implements Runnable{
                         break;
                     }
                 }
-//                scanner.close();
                 return false;
 
             } else if (messageIn.equals(ProtocolMessages.SERVERREADY)) {
@@ -96,7 +118,12 @@ public class ScrabbleServerHandler implements Runnable{
             return false;
     }
 
-
+    /**
+     * Waits to receive a list of tiles from server and returns them
+     * @requires in != null
+     * @return string array of tile letters received
+     * @throws IOException
+     */
     public String[] waitForTiles() throws IOException {
         String[] tiles;
         String messageIn = in.readLine();
@@ -110,6 +137,12 @@ public class ScrabbleServerHandler implements Runnable{
 
     }
 
+    /**
+     * Waits to receive the player list from the server and returns it
+     * @return game player list (names) from server
+     * @requires in != null
+     * @throws IOException
+     */
     public String[] getPlayers() throws IOException {
         String messageIn = in.readLine();
         String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
@@ -121,6 +154,12 @@ public class ScrabbleServerHandler implements Runnable{
         return null;
     }
 
+    /**
+     * Waits to receive server broadcast of the current players turn
+     * @requires in != null
+     * @return name of current player or "PASS" if the player passed
+     * @throws IOException
+     */
     public String waitForTurnBroadcast() throws IOException {
         String messageIn = in.readLine();
         String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
@@ -133,6 +172,11 @@ public class ScrabbleServerHandler implements Runnable{
         }
     }
 
+    /**
+     * Sends the move to the server with correct protocol
+     * @requires out != null
+     * @param move
+     */
     public void sendMove(String[] move){
         String messageOut = ProtocolMessages.MOVE + ProtocolMessages.SEPARATOR;
         for (String part : move){
@@ -143,6 +187,14 @@ public class ScrabbleServerHandler implements Runnable{
 
     }
 
+    /**
+     * Waits to receive move confirmation from the server and splits it into move format
+     * If move was invalid an error message is received and the players turn is over
+     * @requires in != null
+     * @return move played
+     * @throws IOException
+     * @throws InvalidNetworkMoveException
+     */
     public String[] waitForMoveConfirmation() throws IOException, InvalidNetworkMoveException {
         String messageIn = in.readLine();
         String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
@@ -159,6 +211,11 @@ public class ScrabbleServerHandler implements Runnable{
 
     }
 
+    /**
+     * Sends move skip to the server with any tiles to swap in server protocol
+     * @requires out != null
+     * @param move
+     */
     public void sendSkip(String[] move){
         String messageOut = ProtocolMessages.PASS;
         if (move[1].length() > 0){
@@ -171,6 +228,12 @@ public class ScrabbleServerHandler implements Runnable{
         out.flush();
     }
 
+    /**
+     * Waits to receive the port to be used for the chat from the server
+     * @requires in != null
+     * @return port to be used
+     * @throws IOException
+     */
     public int waitForChat() throws IOException {
         String messageIn = in.readLine();
         String[] messageSplit = messageIn.split(ProtocolMessages.SEPARATOR);
