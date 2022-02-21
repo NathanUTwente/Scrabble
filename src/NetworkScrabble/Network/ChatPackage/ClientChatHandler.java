@@ -18,6 +18,12 @@ public class ClientChatHandler implements Runnable, Chat{
     private PrintWriter out;     // Stream for sending data to client.
     private String received = null;
 
+    /**
+     * Creates object and sets up in and out on the connection
+     * @requires connection != null
+     * @ensures in != null && out != null
+     * @param connection connection to communicate with client over
+     */
     public ClientChatHandler(Socket connection){
         this.connection = connection;
         try {
@@ -28,8 +34,11 @@ public class ClientChatHandler implements Runnable, Chat{
         }
     }
 
-
-
+    /**
+     * Sends out given message with proper protocol
+     * @requires message.length() > 0 && out != null
+     * @param message message to send
+     */
     @Override
     public void sendChat(String message) {
         String messageOut = ProtocolMessages.CHAT_FLAG + ProtocolMessages.SEPARATOR + message;
@@ -38,20 +47,27 @@ public class ClientChatHandler implements Runnable, Chat{
 
     }
 
-
+    /**
+     * Does network handshake by waiting for a hello message from client and sending back welcome
+     * @requires in != null && out != null
+     * @throws IOException if connected client is not a ChatClient
+     */
     @Override
     public void doHandshake() throws IOException {
         String messageIn = in.readLine();
         if ((messageIn.split(ProtocolMessages.SEPARATOR)[0].equals(ProtocolMessages.HELLO))){
-            System.out.println("Connected with a ScrabbleClient");
+            System.out.println("Connected with a Scrabble Chat Client");
             out.println(ProtocolMessages.WELCOME);
             out.flush();
         } else {
-            throw new IOException("Connected program is not a ScrabbleClient!");
+            throw new IOException("Connected program is not a Scrabble Chat Client!");
         }
 
     }
 
+    /**
+     * Listens for messages from clients and sets received to the received message
+     */
     @Override
     public void run() {
         while (true){
@@ -65,6 +81,13 @@ public class ClientChatHandler implements Runnable, Chat{
 
     }
 
+    /**
+     * Gets and returns the attribute received and returns it
+     * Uses locks for networking
+     * Resets everytime ready for next message
+     * @ensures received == null
+     * @return last received message
+     */
     public String getReceived() {
         Lock lock = new ReentrantLock();
         lock.lock();
