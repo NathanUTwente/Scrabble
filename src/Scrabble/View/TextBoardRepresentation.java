@@ -3,6 +3,7 @@ package Scrabble.View;
 import Scrabble.Model.BoardModel.Board;
 import Scrabble.Model.BoardModel.Tile;
 import Scrabble.Model.Game;
+import Scrabble.Model.PlayerModels.HumanPlayer;
 import Scrabble.Model.PlayerModels.Player;
 import Scrabble.Model.TileBag;
 import Scrabble.Utils.Exceptions.InvalidAnswerException;
@@ -213,7 +214,7 @@ public class TextBoardRepresentation {
             return move;
         }
 
-        public void displayScores(Map<Player , Integer> scores){
+        public void displayScores(Map<Player, Integer> scores){
             int[] justScores = new int[scores.values().size()];
             int index = 0;
             for (int i : scores.values()){

@@ -16,18 +16,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TileBagTest {
 
-    @BeforeEach
-    void setUp(){
-    }
-
-    Player[] players = new Player[]{new HumanPlayer("Lejla"), new HumanPlayer("Nathan")};
-    Game game = new Game(players);
-    Player playerOne = players[0];
-    Player playerTwo = players[1];
 
 
     @Test
     void testBeginAmountOfTiles(){
+        Player[] players = new Player[]{new HumanPlayer("Lejla"), new HumanPlayer("Nathan")};
+        Game game = new Game(players);
+        Player playerOne = players[0];
+        Player playerTwo = players[1];
         Tile[] tileDeckPlayerOne = playerOne.getTileDeck();
         Tile[] tileDeckPlayerTwo = playerTwo.getTileDeck();
         assertEquals(7, tileDeckPlayerOne.length);
