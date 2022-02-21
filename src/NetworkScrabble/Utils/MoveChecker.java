@@ -85,10 +85,22 @@ public class MoveChecker {
         return null;
     }
 
+    /**
+     * @return Points of last move checked
+     */
     public int getLastMovePoints(){
         return lastMovePoints;
     }
 
+    /**
+     * Takes a position and direction and iterates squares in that direction recording the tiles letters until it comes to an empty square
+     * Also checks that at least one letter is adjacent to an existing letter
+     * @requires boardCopy != null
+     * @param col starting column
+     * @param row starting row
+     * @param direction direction to iterate in
+     * @return array with word and T if adjacent
+     */
     public String[] getWordTillEmpty(int col, int row, String direction){
         ArrayList<Boolean> adjacent = new ArrayList<>();
         String adjacentResult = "F";
@@ -137,6 +149,16 @@ public class MoveChecker {
         return new String[]{word, adjacentResult};
     }
 
+    /**
+     * Tests if at least one adjacent square is not empty
+     * Takes a letter to exclude, allows it to skip the letters in the move just played
+     * If first move of the game it just return
+     * @requires firstDone != null
+     * @param col column to check from
+     * @param row row to check from
+     * @param exclude letter to exclude
+     * @return true if at least on adjacent tile is not empty
+     */
     public boolean adjacentNotEmpty(int col, int row, String exclude){
         if (!firstDone){
             firstDone = true;
@@ -165,6 +187,16 @@ public class MoveChecker {
         return notEmpty;
     }
 
+    /**
+     * Calculates the points of the move by taking the word of the move and the letters used to calculate points
+     * Also calculates points of words made adjacent to new word
+     * @param word word of move
+     * @param lettersUsed letters played by player
+     * @param col start column of move
+     * @param row start row of move
+     * @param direction direction of move
+     * @return points calculated
+     */
     public int calculatePoints(String word, String lettersUsed, int col, int row, String direction){
         int score = 0;
         int wordMultiplier = 1;
@@ -204,6 +236,11 @@ public class MoveChecker {
         return score*wordMultiplier;
     }
 
+    /**
+     * Calculates points of a given word by checking points of each letters tile
+     * @param word word to check
+     * @return points of word
+     */
     public int calculatePoints(String word){
         int score = 0;
         for (int i = 0; i < word.length(); i++){
@@ -212,6 +249,11 @@ public class MoveChecker {
         return score;
     }
 
+    /**
+     * Checks if the first move included centre tile
+     * Used after first tiles are placed on simulated board
+     * @return truen if centre is not empty
+     */
     public boolean firstMoveOnCentre(){
         return !boardCopy.isEmpty(7, 7);
     }

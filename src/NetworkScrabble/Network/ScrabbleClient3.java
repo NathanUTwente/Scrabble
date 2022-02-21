@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 import static java.lang.System.in;
 
-public class ScrabbleClient2 {
+public class ScrabbleClient3 {
 
     static final int DEFAULT_PORT = 8028;
     private String name;
@@ -27,7 +27,7 @@ public class ScrabbleClient2 {
      * Gets clients name, connects to server, lobby and game, and then controls client playing game
      */
     public static void main(String[] args) {
-        ScrabbleClient2 client = new ScrabbleClient2();
+        ScrabbleClient3 client = new ScrabbleClient3();
         client.getName();
         client.connectToServer();
         client.waitForLobbyAndReady();
