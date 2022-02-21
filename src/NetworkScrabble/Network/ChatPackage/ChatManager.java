@@ -16,12 +16,25 @@ public class ChatManager implements Runnable{
     int players;
     int port;
 
+    /**
+     * Creates object and sets up port
+     * @ensures port != null & players != null
+     * @param port port to use for chat
+     * @param players players in game
+     */
     public ChatManager(int port, int players){
         this.port = port;
         this.players = players;
         setUp(port);
     }
 
+    /**
+     * Sets socket with given port
+     * For each player in game it waits for them to connect and creates a handler for them on new thread
+     * Also tells handler to do handshaker
+     * @requires port != null && handlers.size() > 0
+     * @param port port for listener
+     */
     public void setUp(int port) {
         try {
             listener = new ServerSocket(port);
@@ -39,6 +52,10 @@ public class ChatManager implements Runnable{
         }
     }
 
+    /**
+     * While running checks each client's last received message every 1/2 second
+     * Sends out message to other client if found
+     */
     @Override
     public void run() {
         while (true){
