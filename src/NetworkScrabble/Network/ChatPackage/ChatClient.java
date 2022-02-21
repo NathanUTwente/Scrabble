@@ -67,17 +67,17 @@ public class ChatClient implements  Chat, Runnable{
     public void run() {
         while (true){
             if (!amListener) {
-//                synchronized (userInput){
-//                if (userInput.hasNextLine()) {
-//                    String text = userInput.nextLine();
-//                    String[] split = text.split(" ");
-//                    if (split[0].toUpperCase(Locale.ROOT).equals("CHAT")) {
-//                        String message = text.substring(5);
-//                        sendChat(message);
-//                    }
-//
-//                }
-//            }
+                synchronized (userInput){
+                if (userInput.hasNextLine()) {
+                    String text = userInput.nextLine();
+                    String[] split = text.split(" ");
+                    if (split[0].toUpperCase(Locale.ROOT).equals("CHAT")) {
+                        String message = text.substring(5);
+                        sendChat(message);
+                    }
+
+                }
+            }
             } else {
                 try {
                         String messageIn = in.readLine();

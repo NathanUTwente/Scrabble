@@ -105,7 +105,7 @@ public class ScrabbleClient2 {
             ScrabbleServerHandler handler = new ScrabbleServerHandler(connection, this.name);
             serverHandler = handler;
             handler.doHandShake();
-            System.out.println("Connected.  Please wait to join");
+            System.out.println("Connected.  Welcome to the lobby, please wait for others to join");
         } catch (IOException e) {
             e.printStackTrace();
         }
