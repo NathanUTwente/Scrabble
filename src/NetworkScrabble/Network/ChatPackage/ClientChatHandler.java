@@ -83,7 +83,7 @@ public class ClientChatHandler implements Runnable, Chat{
 
     /**
      * Gets and returns the attribute received and returns it
-     * Uses locks for networking
+     * Uses locks for networking to fix bug where it kept returning null
      * Resets everytime ready for next message
      * @ensures received == null
      * @return last received message
