@@ -54,6 +54,7 @@ public class ChatManager implements Runnable{
 
     /**
      * While running checks each client's last received message every 1/2 second
+     * Uses locks to fix bug
      * Sends out message to other client if found
      */
     @Override
