@@ -1,6 +1,8 @@
 package NetworkScrabble.Utils;
 
-
+/**
+ * Class given to us during an assignment
+ */
 public class QuickSort {
     public static void qsort(int[] a) {
         qsort(a, 0, a.length - 1);
